@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1524069266714.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "821BD765",
+    "lastKnownWriteTime" : 3833180308419998817,
+    "last_content_update" : 1524069266714,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "C400F467",
+        "caption" : "chicago_full",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=chicago_full&cache_key=C400F467",
+        "displayedObservations" : 82,
+        "environment" : "",
+        "object" : "chicago_full",
+        "preview" : 0,
+        "totalObservations" : 82,
+        "variables" : 6
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
