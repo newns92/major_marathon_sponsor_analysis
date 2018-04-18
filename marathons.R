@@ -108,11 +108,7 @@ for (i in 1:(nrow(boston_full))) {
                                                           nchar(boston_full$winner[i])-6))/2)+1,
                                    round(nchar(boston_full$winner[i])/2)+1))))
 }
-boston_full$winner[22] <- "Camp Devens relay team[3]"
-  
-#tail(boston_full)
-#tail(subset(boston_full,gender=="Male"))
-  
+
 head(london_full)
 for (i in 1:(nrow(london_full))) {
   london_full$winner[i] <- substrLeft(london_full$winner[i],
@@ -122,7 +118,6 @@ for (i in 1:(nrow(london_full))) {
                                               round(nchar(london_full$winner[i])/2)+1))
 }
     
-
 for (i in 1:(nrow(berlin_full))) {
   berlin_full$winner[i] <- substrLeft(berlin_full$winner[i], round(nchar(berlin_full$winner[i])/2) + 1)
 }
@@ -134,6 +129,12 @@ tail(berlin_full)
 for (i in 1:(nrow(chicago_full))) {
   chicago_full$winner[i] <- substrLeft(chicago_full$winner[i], round(nchar(chicago_full$winner[i])/2) + 1)
 }
-chicago_full$winner[69] <- "Diță, Constantina"
 head(chicago_full)
 tail(chicago_full)
+
+
+tokyo_full$winner[20] <- "Noriko Higuchi" # footnote added to name?
+nyc_full[c(43,89),] <- NULL # hurrican sandy
+chicago_full$winner[69] <- "Diță, Constantina"
+chicago_full[c(11,52),] <- NULL # Due to sponsorship complications, the event was contested as a half marathon
+boston_full[22,] <- NULL # realy team?
