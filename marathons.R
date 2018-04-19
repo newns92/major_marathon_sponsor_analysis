@@ -39,7 +39,9 @@ tokyo_women <- tokyo[[2]][,c(1,5:7)] %>%
   rename(winner="Women's winner",country=Country,"time"="Time (m:s)",year=Year) %>%
   mutate(year = substr(year,0,4),gender="Female",time=substrLeft(time,7))
 tokyo_full <- bind_rows(tokyo_men,tokyo_women) %>%
-  mutate(marathon="Tokyo")
+  mutate(marathon="Tokyo") %>%
+  select(year,winner,gender,country,time,marathon) %>%
+  arrange(desc(year))
 
 berlin_men <- berlin[[4]][,2:5] %>%
   rename(winner="Male winner",country=Country,"time"="Time (h:m:s)") %>%
@@ -51,8 +53,10 @@ berlin_women <- berlin[[4]][,c(2,6:8)] %>%
   mutate(year = substrRight(Date,4),gender="Female",winner=str_replace(winner,",","")
          ,time=substrLeft(time,7)) %>%
   select(-Date,year,winner,gender,country,time)
-berlin_full <- bind_rows(berlin_men,berlin_men) %>%
-  mutate(marathon="Berlin")
+berlin_full <- bind_rows(berlin_men,berlin_women) %>%
+  mutate(marathon="Berlin") %>%
+  select(year,winner,gender,country,time,marathon) %>%
+  arrange(desc(year))
 
 nyc_men <- nyc[[1]] %>%
   rename(winner="Winner",country=Country,"time"="Time",year=Year) %>%
@@ -63,7 +67,9 @@ nyc_women <- nyc[[2]] %>%
   mutate(gender="Female",time=substrLeft(time,7)) %>%
   select(year,winner,gender,country,time,-Notes)
 nyc_full <- bind_rows(nyc_men,nyc_women) %>%
-  mutate(marathon="NYC")
+  mutate(marathon="NYC") %>%
+  select(year,winner,gender,country,time,marathon) %>%
+  arrange(desc(year))
 
 london_men <- london[[1]] %>%
   rename(winner=Athlete,country=Nationality,"time"="Time\n(h:m:s)",year=Year) %>%
@@ -74,7 +80,9 @@ london_women <- london[[2]] %>%
   mutate(gender="Female",winner=str_replace(winner,",",""),time=substrLeft(time,7)) %>%
   select(year,winner,gender,country,time,-Notes)
 london_full <- bind_rows(london_men,london_women) %>%
-  mutate(marathon="London")
+  mutate(marathon="London") %>%
+  select(year,winner,gender,country,time,marathon) %>%
+  arrange(desc(year))
 
 boston_men <- boston[[2]] %>%
   rename(winner=Athlete,country="Country/State","time"="Time",year=Year) %>%
@@ -85,7 +93,9 @@ boston_women <- boston[[3]] %>%
   mutate(gender="Female",winner=str_replace(winner,",",""),time=substrLeft(time,7)) %>%
   select(year,winner,gender,country,time,-Notes)
 boston_full <- bind_rows(boston_men,boston_women) %>%
-  mutate(marathon="Boston")
+  mutate(marathon="Boston") %>%
+  select(year,winner,gender,country,time,marathon) %>%
+  arrange(desc(year))
 
 chicago_men <- chicago[[2]][,1:4] %>%
   rename(winner="Male athlete",country=Country,"time"="Time") %>%
@@ -98,10 +108,11 @@ chicago_women <- chicago[[2]][,c(1,5:7)] %>%
          ,time=substrLeft(time,7)) %>%
   select(-Date,year,winner,gender,country,time)
 chicago_full <- bind_rows(chicago_men,chicago_women) %>%
-  mutate(marathon="Chicago")
+  mutate(marathon="Chicago") %>%
+  select(year,winner,gender,country,time,marathon) %>%
+  arrange(desc(year))
 
 # south korea and 17 18 not doubled?
-boston_full$winner[74] <- "Hill, Ron !Ron Hill"
 for (i in 1:(nrow(boston_full))) {
   boston_full$winner[i] <- if_else(boston_full$country[i] == "South Korea",boston_full$winner[i],
          if_else(boston_full$year[i] %in% c(2017,2018) & boston_full$gender[i] == "Male",boston_full$winner[i],
@@ -112,7 +123,7 @@ for (i in 1:(nrow(boston_full))) {
                                                           nchar(boston_full$winner[i])-6))/2),
                                    round(nchar(boston_full$winner[i])/2)))))
 }
-head(boston_full)
+#head(boston_full)
 
 for (i in 1:(nrow(london_full))) {
   london_full$winner[i] <- substrRight(
@@ -125,32 +136,44 @@ for (i in 1:(nrow(london_full))) {
                                               substrLeft(london_full$winner[i],nchar(london_full$winner[i])-6),
                                               london_full$winner[i]))/2)
 }
-head(london_full)
+#head(london_full)
 
 for (i in 1:(nrow(berlin_full))) {
   berlin_full$winner[i] <- substrRight(berlin_full$winner[i], round(nchar(berlin_full$winner[i])/2))
 }
 
-head(berlin_full)
-tail(berlin_full)
+#head(berlin_full)
+#tail(berlin_full)
 
 
 for (i in 1:(nrow(chicago_full))) {
   chicago_full$winner[i] <- substrRight(chicago_full$winner[i], round(nchar(chicago_full$winner[i])/2))
 }
-head(chicago_full)
-tail(chicago_full)
+#head(chicago_full)
+#tail(chicago_full)
 
 
-tokyo_full$winner[20] <- "Noriko Higuchi" # footnote added to name?
-nyc_full$winner[c(43,89)] <- c(NA,NA) # hurrican sandy
-chicago_full$winner[c(69,11,52)] <- c("Diță, Constantina",NA,NA)
-#chicago_full$winner[c(11,52)] <- NA # Due to sponsorship complications, the event was contested as a half marathon
-boston_full$winner[22] <- NA # realy team?
-boston_full$winner[c(4,5,16,22,36,53,74,124,125,135)] <- c("Jack Caffery","Jack Caffery","Michael J. Ryan","Relay",
-                                                       "Paul de Bruyn","Gösta Leandersson","Ron Hill","Bobbi Gibb",
-                                                       "Bobbi Gibb","Gayle Barron")
-london_full$time
+tokyo_full$winner[16] <- "Noriko Higuchi" # footnote added to name?
+
+chicago_full$winner[28] <- "Dita, Constantina"
+chicago_full[81:82,] <- mutate(chicago_full[81:82,], gender=NA, year=1987, winner=NA,country=NA,time=NA)
+chicago_full <- chicago_full %>% arrange(desc(year)) # Due to sponsorship complications, the event was contested as a half marathon
+
+nyc_full[11:12,] <- mutate(nyc_full[11:12,], gender=NA,winner=NA,country=NA,time=NA) # hurricane sandy
+
+
+
+boston_full$winner[c(172,173,161,141,124,103,105,107,98,83)] <- c("Jack Caffery","Jack Caffery","Michael J. Ryan","Paul de Bruyn",
+                                                             "Gösta Leandersson","Bobbi Gibb","Bobbi Gibb","Bobbi Gibb","Ron Hill",
+                                                             "Gayle Barron")
+boston_full[155,] <- mutate(boston_full[155,], gender=NA, winner=NA,country=NA,time=NA) # relay team?
+
+boston_full %>%
+  mutate(country = if_else(str_detect(country, "United States"),"United States",
+                           if_else(str_detect(country, "Canada"),"Canada",
+                                   if_else(str_detect(country, "Germany"),"Germany",
+                                           if_else(str_detect(country, "Greece"),"Greece",country)))))
+  #  mutate(ifelse())
 # "Gösta Leandersson" # why cutoff?
 #16 = Michael J. Ryan # middle initial
 #36 = Paul de Bruyn # split last name
