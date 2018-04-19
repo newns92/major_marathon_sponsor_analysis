@@ -39,7 +39,7 @@ tokyo_women <- tokyo[[2]][,c(1,5:7)] %>%
   rename(winner="Women's winner",country=Country,"time"="Time (m:s)",year=Year) %>%
   mutate(year = substr(year,0,4),gender="Female",time=substrLeft(time,7))
 tokyo_full <- bind_rows(tokyo_men,tokyo_women) %>%
-  mutate(marathon="Tokyo") %>%
+  mutate(marathon="Tokyo", year=as.character(year),time=as.POSIXct(time, format = '%H:%M:%S')) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
@@ -54,7 +54,7 @@ berlin_women <- berlin[[4]][,c(2,6:8)] %>%
          ,time=substrLeft(time,7)) %>%
   select(-Date,year,winner,gender,country,time)
 berlin_full <- bind_rows(berlin_men,berlin_women) %>%
-  mutate(marathon="Berlin") %>%
+  mutate(marathon="Berlin", year=as.character(year),time=as.POSIXct(time, format = '%H:%M:%S')) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
@@ -67,7 +67,7 @@ nyc_women <- nyc[[2]] %>%
   mutate(gender="Female",time=substrLeft(time,7)) %>%
   select(year,winner,gender,country,time,-Notes)
 nyc_full <- bind_rows(nyc_men,nyc_women) %>%
-  mutate(marathon="NYC") %>%
+  mutate(marathon="NYC", year=as.character(year),time=as.POSIXct(time, format = '%H:%M:%S')) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
@@ -80,7 +80,7 @@ london_women <- london[[2]] %>%
   mutate(gender="Female",winner=str_replace(winner,",",""),time=substrLeft(time,7)) %>%
   select(year,winner,gender,country,time,-Notes)
 london_full <- bind_rows(london_men,london_women) %>%
-  mutate(marathon="London") %>%
+  mutate(marathon="London", year=as.character(year),time=as.POSIXct(time, format = '%H:%M:%S')) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
@@ -93,7 +93,7 @@ boston_women <- boston[[3]] %>%
   mutate(gender="Female",winner=str_replace(winner,",",""),time=substrLeft(time,7)) %>%
   select(year,winner,gender,country,time,-Notes)
 boston_full <- bind_rows(boston_men,boston_women) %>%
-  mutate(marathon="Boston") %>%
+  mutate(marathon="Boston", year=as.character(year),time=as.POSIXct(time, format = '%H:%M:%S')) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
@@ -108,7 +108,7 @@ chicago_women <- chicago[[2]][,c(1,5:7)] %>%
          ,time=substrLeft(time,7)) %>%
   select(-Date,year,winner,gender,country,time)
 chicago_full <- bind_rows(chicago_men,chicago_women) %>%
-  mutate(marathon="Chicago") %>%
+  mutate(marathon="Chicago", year=as.character(year),time=as.POSIXct(time, format = '%H:%M:%S')) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
@@ -168,11 +168,18 @@ boston_full$winner[c(172,173,161,141,124,103,105,107,98,83)] <- c("Jack Caffery"
                                                              "Gayle Barron")
 boston_full[155,] <- mutate(boston_full[155,], gender=NA, winner=NA,country=NA,time=NA) # relay team?
 
-boston_full %>%
+boston_full <- boston_full %>%
   mutate(country = if_else(str_detect(country, "United States"),"United States",
                            if_else(str_detect(country, "Canada"),"Canada",
                                    if_else(str_detect(country, "Germany"),"Germany",
                                            if_else(str_detect(country, "Greece"),"Greece",country)))))
+
+majorMarathons <- bind_rows(tokyo_full,berlin_full,boston_full,nyc_full,london_full,chicago_full) %>%
+  mutate(year=factor(as.integer(year)))
+glimpse(majorMarathons)
+
+saveRDS(majorMarathons, file="majorMarathons.Rda")
+
   #  mutate(ifelse())
 # "Gösta Leandersson" # why cutoff?
 #16 = Michael J. Ryan # middle initial
