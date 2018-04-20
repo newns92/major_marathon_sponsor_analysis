@@ -1,0 +1,89 @@
+---
+title: "Analysis"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+marathons <- read_rds('majorMarathons.Rda')
+glimpse(marathons)
+```
+
+```{r cars}
+glimpse(marathons)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+marathons %>%
+  filter(!is.na(country)) %>%
+  group_by(country)%>%
+  summarise(count = n()) %>%
+  filter(count>10) %>%
+  ggplot(aes(country,count)) + 
+    geom_bar(stat="identity",colour="Black",fill="Blue") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    xlab("Country") + 
+    ylab("Frequency") +
+    ggtitle("Total Major Marathon Wins by Country")
+```    
+ 
+```{r}
+ marathons %>%
+  filter(!is.na(country)) %>%
+  group_by(winner,country,gender)%>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+```
+
+
+```{r pressure, echo=FALSE}
+marathons %>%
+  filter(!is.na(country),
+         year>=1966) %>%
+  group_by(country,gender) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  filter(count>5) %>%
+  ggplot(aes(country,count)) + 
+    geom_bar(aes(fill=gender),stat="identity",colour="Black") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    xlab("Country") + 
+    ylab("Frequency") +
+    ggtitle("Total Major Marathon Wins by Country")
+```  
+
+```{r}
+ marathons %>%
+  filter(!is.na(country),
+         year>=1966) %>%
+  group_by(marathon,gender)%>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+#marathons %>%
+#  filter(!is.na(country),
+#         year>=1966) %>%
+  #group_by(country,gender) %>%
+  #summarise(count = n()) %>%
+  #arrange(desc(count)) %>%
+  #filter(count>5) %>%
+  ggplot(marathons,aes(x=country)) + 
+    geom_bar() + 
+    coord_cartesian(ylim=c(30,115))
+```
+  aes(y = ..count.., fill=gender),stat="identity",colour="Black",
+             position="dodge") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    xlab("Country") + 
+    ylab("Frequency") +
+    ggtitle("Total Major Marathon Wins by Country") + 
+  facet_grid(.~marathon)
+```   

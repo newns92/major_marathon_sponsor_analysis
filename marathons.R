@@ -112,12 +112,20 @@ chicago_full <- bind_rows(chicago_men,chicago_women) %>%
   select(year,winner,gender,country,time,marathon) %>%
   arrange(desc(year))
 
-# south korea and 17 18 not doubled?
+#**********************************************************************************************/
+
+rm(tokyo,tokyo_men,tokyo_women,chicago,chicago_men,chicago_women,boston,boston_men,boston_women,
+   berlin,berlin_men,berlin_women,london,london_men,london_women,nyc,nyc_men,nyc_women)
+
+#**********************************************************************************************/
+
+# south korea and 2017 2018 males not doubled?
 for (i in 1:(nrow(boston_full))) {
+  # south korea athletes + 2017/2018 mens champs not doubled
   boston_full$winner[i] <- if_else(boston_full$country[i] == "South Korea",boston_full$winner[i],
          if_else(boston_full$year[i] %in% c(2017,2018) & boston_full$gender[i] == "Male",boston_full$winner[i],
                 substrRight(boston_full$winner[i],
-                           # even
+                           # check for ties, then cut in half correctly based on even/odd # of characters
                            if_else(substrRight(boston_full$winner[i],5)=="(Tie)",
                                    round(nchar(substrLeft(boston_full$winner[i],
                                                           nchar(boston_full$winner[i])-6))/2),
@@ -127,55 +135,59 @@ for (i in 1:(nrow(boston_full))) {
 
 for (i in 1:(nrow(london_full))) {
   london_full$winner[i] <- substrRight(
-                                # test for '(Tie)'
+                                # check for ties, then cut in half correctly based on even/odd # of characters
                                 if_else(substrRight(london_full$winner[i],5)=="(Tie)",
                                         substrLeft(london_full$winner[i],nchar(london_full$winner[i])-6),
                                         london_full$winner[i]),
-                                #
-                                nchar(if_else(substrRight(london_full$winner[i],5)=="(Tie)",
-                                              substrLeft(london_full$winner[i],nchar(london_full$winner[i])-6),
+                                              nchar(if_else(substrRight(london_full$winner[i],5)=="(Tie)",
+                                                  substrLeft(london_full$winner[i],nchar(london_full$winner[i])-6),
                                               london_full$winner[i]))/2)
 }
 #head(london_full)
 
+### rest are even b/c doubled (any int * even int = even int)
 for (i in 1:(nrow(berlin_full))) {
   berlin_full$winner[i] <- substrRight(berlin_full$winner[i], round(nchar(berlin_full$winner[i])/2))
 }
-
 #head(berlin_full)
-#tail(berlin_full)
-
 
 for (i in 1:(nrow(chicago_full))) {
   chicago_full$winner[i] <- substrRight(chicago_full$winner[i], round(nchar(chicago_full$winner[i])/2))
 }
 #head(chicago_full)
-#tail(chicago_full)
 
+#**********************************************************************************************/
+# special ad-hoc final cleaning
 
 tokyo_full$winner[16] <- "Noriko Higuchi" # footnote added to name?
 
-chicago_full$winner[28] <- "Dita, Constantina"
+# bad characters
+chicago_full$winner[28] <- "Dita, Constantina" 
+# Due to sponsorship complications, the event was contested as a half marathon
 chicago_full[81:82,] <- mutate(chicago_full[81:82,], gender=NA, year=1987, winner=NA,country=NA,time=NA)
-chicago_full <- chicago_full %>% arrange(desc(year)) # Due to sponsorship complications, the event was contested as a half marathon
+chicago_full <- chicago_full %>% arrange(desc(year))
 
-nyc_full[11:12,] <- mutate(nyc_full[11:12,], gender=NA,winner=NA,country=NA,time=NA) # hurricane sandy
+# hurricane sandy
+nyc_full[11:12,] <- mutate(nyc_full[11:12,], gender=NA,winner=NA,country=NA,time=NA) 
 
-
-
+# random edits = nickname for Caffery, non-consistent middle initials (Ryan, Barron, Gibb = ???, split/not split last name (deBruyn)
+# inconsistent names (Gosta), exclamation point (Hill)?
 boston_full$winner[c(172,173,161,141,124,103,105,107,98,83)] <- c("Jack Caffery","Jack Caffery","Michael J. Ryan","Paul de Bruyn",
                                                              "Gösta Leandersson","Bobbi Gibb","Bobbi Gibb","Bobbi Gibb","Ron Hill",
                                                              "Gayle Barron")
-boston_full[155,] <- mutate(boston_full[155,], gender=NA, winner=NA,country=NA,time=NA) # relay team?
-
+# relay team?
+boston_full[155,] <- mutate(boston_full[155,], gender=NA, winner=NA,country=NA,time=NA)
+# fix doubled country's + the US, which includes state for some reason
 boston_full <- boston_full %>%
   mutate(country = if_else(str_detect(country, "United States"),"United States",
                            if_else(str_detect(country, "Canada"),"Canada",
                                    if_else(str_detect(country, "Germany"),"Germany",
                                            if_else(str_detect(country, "Greece"),"Greece",country)))))
 
+#**********************************************************************************************/
+#final binding
 majorMarathons <- bind_rows(tokyo_full,berlin_full,boston_full,nyc_full,london_full,chicago_full) %>%
-  mutate(year=factor(as.integer(year)))
+  mutate(year=as.integer(year))
 glimpse(majorMarathons)
 
 saveRDS(majorMarathons, file="majorMarathons.Rda")
