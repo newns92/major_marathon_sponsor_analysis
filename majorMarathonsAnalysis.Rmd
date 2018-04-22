@@ -18,7 +18,7 @@ glimpse(marathons)
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
+```{r, echo=FALSE}
 marathons %>%
   filter(!is.na(country)) %>%
   group_by(country)%>%
@@ -40,7 +40,10 @@ marathons %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 ```
+US not a major marathon power, but bill rodgers most marathon major wins 
+both top males = US + many wins @ boston (give atble)
 
+top 2 females = norwat (waitz = 1st female < 2:30:00)
 
 ```{r pressure, echo=FALSE}
 marathons %>%
@@ -86,4 +89,55 @@ marathons %>%
     ylab("Frequency") +
     ggtitle("Total Major Marathon Wins by Country") + 
   facet_grid(.~marathon)
-```   
+
+
+library(data.table)
+mdt <- marathons %>%
+  mutate(year=as.integer(year)) %>%
+  as.data.table()
+dcast.data.table(mdt, country ~ year,
+                           fun.aggregate = count)
+
+  
+  
+```{r}
+filter(marathons,country=="Kenya")[which.min(filter(marathons,country=="Kenya")$year),]
+```
+```{r}
+# wins bykenya by year
+marathons %>%
+  filter(country %in% c("Kenya","Norway","Unites States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  group_by(country,year) %>%
+  summarize(count = n()) %>%
+  ggplot(aes(x=year,y=cumsum(count),group=country,color=country)) + 
+    geom_freqpoly(stat = "identity") + 
+  coord_cartesian(xlim=c(1985,2018))
+#length(marathons$year)
+```
+
+```{r}
+marathons %>% 
+  group_by(country, year) %>%
+  summarise(value = n()) %>%
+  mutate(csum = cumsum(value)) %>%
+  group_by(country) %>%
+  summarise(n = max(csum)) %>%
+  arrange(desc(n))
+```
+
+```{r, warning=F,message=FALSE}
+marathons %>% 
+  group_by(country, year) %>%
+  summarise(value = n()) %>%
+  #mutate(csum = cumsum(value)) %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
+  stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line")+
+  stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line")+
+  stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line")+
+  stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line")+
+  stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line")+
+  stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line")+
+  stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line")
+```
+compare wiht olympics + world champs?
