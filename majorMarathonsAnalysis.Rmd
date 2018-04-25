@@ -3,7 +3,7 @@ title: "Analysis"
 output: html_document
 ---
 
-```{r}
+```{r,warning=F,message=F}
 library(tidyverse)
 library(ggplot2)
 library(RColorBrewer)
@@ -133,15 +133,25 @@ marathons %>%
   #mutate(csum = cumsum(value)) %>%
   filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
   ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
-    stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
-    stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
-    stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
-    stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
-    stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
-    stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
-    stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.25) +
+    stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
+    geom_point(aes(1967,37),size=3,color="purple") +  # bowerman = jogging
+    geom_point(aes(1972,48),size=3,color="purple") +
+    #geom_vline(xintercept=1972) +
+    geom_text(aes(x=1950, label="Frank Shorter (1972)", y=90), colour="blue", angle=0,
+              text=element_text(size=.25)) +
+    #geom_vline(xintercept=1984) + 
+    geom_point(aes(1984,90),size=3,color="purple") +
+    geom_text(aes(x=2004, label="Joan Benoit (1984)", y=145), colour="red", angle=0,
+              text=element_text(size=.25)) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    coord_cartesian(ylim=c(0,150)) + 
     xlab("Country") + 
     ylab("Frequency") +
     ggtitle("Total Major Marathon Wins by Country")
@@ -164,18 +174,37 @@ marathons %>%
 ```{r,warning=F,message=F}
 medianTime <- median(marathons$time,na.rm=T)
 
+is_outlier <- function(x, na.rm=T) {
+  return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
+}
+
+marathons %>%
+  filter(!is.na(time)) %>%
+  mutate(outlier = ifelse(is_outlier(time), year, as.numeric(NA))) %>%
+  ggplot(aes(marathon,time)) + 
+    #geom_jitter(aes(color = marathon),alpha=.6) +
+    geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
+    coord_cartesian(ylim=c(as.POSIXct("2018-04-24 02:00:00"),as.POSIXct("2018-04-24 03:35:00"))) + 
+    geom_text(aes(label = outlier), na.rm = TRUE, hjust = -0.3)
+```
+Outlieres in Bostoin + Berlin
+```{r}
 marathons %>%
   ggplot(aes(marathon,time)) + 
     #geom_jitter(aes(color = marathon),alpha=.6) +
-    geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    labs(x="Country",y="Frequency",main="Total Major Marathon Wins by Country") +
-    #annotate('text', label=paste0('overall median: ', round(median(time))), x = 'MMI', y = median(time)+5, size = 3.5) +
-    geom_hline(aes(yintercept=medianTime), colour="red", linetype=2, lwd=1.25) + 
-    coord_cartesian(ylim=c(as.POSIXct("2018-04-19 02:00:00"),as.POSIXct("2018-04-19 03:35:00")))
+    geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
+    coord_cartesian(ylim=c(as.POSIXct("2018-04-24 02:00:00"),as.POSIXct("2018-04-24 03:00:00")))
 ```
 
+closest to normal looks like tokyo (disproven by density)
+all similar variance (height)
+londong seems fastest (berling + chicago noted for it, but slightly older)
+
+```{r}
+marathons %>%
+  ggplot(aes(time)) + 
+  geom_histogram(bins=15,na.rm=T)
+```
 
 ```{r, warning=F,message=F}
 marathons %>%
@@ -191,18 +220,41 @@ marathons %>%
 ```{r}
 marathons %>%
   ggplot(aes(time)) + 
-  geom_histogram(bins=15,na.rm=T)
-```
-```{r}
-marathons %>%
-  ggplot(aes(time)) + 
   geom_density(aes(group=gender,fill=gender),alpha=.4)
 ```
 
 ```{r}
+library(scales)
 marathons %>%
-  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
-  ggplot(aes(time)) + 
-  geom_density(aes(group=country,fill=country),alpha=.4) + 
-  scale_fill_brewer(palette = "Set2") #+  
+  #filter(marathon %in% c("Berlin","Boston","Chicago")) %>%
+  ggplot() + 
+  stat_density(aes(x=time,y=..scaled..,fill=marathon),color="black") + 
+  #geom_histogram(aes(fill=marathon),bins=15) +
+  scale_fill_brewer(palette = "Set2") +
+  facet_wrap(~marathon) + 
+  guides(fill=F) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  #scale_y_continuous() + 
+```
+
+Berlin + Chicago = going for time, why bimodal?
+
+```{r}
+marathons %>%
+ # filter(marathon %in% c("NYC","London","Tokyo")) %>%
+  ggplot(aes(year,time,color=marathon)) + 
+  geom_smooth() + 
+  #geom_smooth()
+  facet_wrap(~marathon, scales = "free_x")
+```
+
+```{r}
+marathons %>%
+ # filter(marathon %in% c("NYC","London","Tokyo")) %>%
+  ggplot(aes(year,time,color=marathon)) + 
+  geom_smooth(se=F) + 
+  #geom_smooth()
+  facet_wrap(~marathon) +#, scales = "free_x") + 
+  coord_cartesian(xlim=c(2007,2017),ylim = c(as.POSIXct("2018-04-24 02:00:00"),as.POSIXct("2018-04-24 02:25:00")))
+          
 ```
