@@ -6,6 +6,7 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(RColorBrewer)
 marathons <- read_rds('majorMarathons.Rda')
 glimpse(marathons)
 ```
@@ -54,7 +55,7 @@ marathons %>%
   arrange(desc(count)) %>%
   filter(count>5) %>%
   ggplot(aes(country,count)) + 
-    geom_bar(aes(fill=gender),stat="identity",colour="Black") +
+    geom_bar(aes(fill=gender),stat="identity",colour="Black",position="dodge") +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     xlab("Country") + 
@@ -103,7 +104,7 @@ dcast.data.table(mdt, country ~ year,
 ```{r}
 filter(marathons,country=="Kenya")[which.min(filter(marathons,country=="Kenya")$year),]
 ```
-```{r}
+
 # wins bykenya by year
 marathons %>%
   filter(country %in% c("Kenya","Norway","Unites States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
@@ -113,7 +114,7 @@ marathons %>%
     geom_freqpoly(stat = "identity") + 
   coord_cartesian(xlim=c(1985,2018))
 #length(marathons$year)
-```
+
 
 ```{r}
 marathons %>% 
@@ -132,12 +133,76 @@ marathons %>%
   #mutate(csum = cumsum(value)) %>%
   filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
   ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
-  stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line")+
-  stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line")+
-  stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line")+
-  stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line")+
-  stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line")+
-  stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line")+
-  stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line")
+    stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
+    stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
+    stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
+    stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
+    stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
+    stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.25)+
+    stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.25) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    xlab("Country") + 
+    ylab("Frequency") +
+    ggtitle("Total Major Marathon Wins by Country")
 ```
 compare wiht olympics + world champs?
+
+```{r}
+marathons %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  ggplot(aes(country,time)) + 
+    geom_jitter(aes(color = country),alpha=.6) +
+    geom_boxplot(aes(fill = country),alpha=.2,outlier.colour = "black") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    xlab("Country") + 
+    ylab("Frequency") +
+    ggtitle("Total Major Marathon Wins by Country")
+```
+
+```{r,warning=F,message=F}
+medianTime <- median(marathons$time,na.rm=T)
+
+marathons %>%
+  ggplot(aes(marathon,time)) + 
+    #geom_jitter(aes(color = marathon),alpha=.6) +
+    geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    labs(x="Country",y="Frequency",main="Total Major Marathon Wins by Country") +
+    #annotate('text', label=paste0('overall median: ', round(median(time))), x = 'MMI', y = median(time)+5, size = 3.5) +
+    geom_hline(aes(yintercept=medianTime), colour="red", linetype=2, lwd=1.25) + 
+    coord_cartesian(ylim=c(as.POSIXct("2018-04-19 02:00:00"),as.POSIXct("2018-04-19 03:35:00")))
+```
+
+
+```{r, warning=F,message=F}
+marathons %>%
+  left_join(marathons %>%
+    group_by(year) %>%
+    summarize(minTime = min(time,na.rm=T)) %>%
+    arrange(year),by = "year") %>%
+  ggplot(aes(year,minTime)) + 
+  geom_line() + 
+  geom_smooth()
+```
+
+```{r}
+marathons %>%
+  ggplot(aes(time)) + 
+  geom_histogram(bins=15,na.rm=T)
+```
+```{r}
+marathons %>%
+  ggplot(aes(time)) + 
+  geom_density(aes(group=gender,fill=gender),alpha=.4)
+```
+
+```{r}
+marathons %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  ggplot(aes(time)) + 
+  geom_density(aes(group=country,fill=country),alpha=.4) + 
+  scale_fill_brewer(palette = "Set2") #+  
+```
