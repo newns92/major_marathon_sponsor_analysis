@@ -191,6 +191,8 @@ majorMarathons <- bind_rows(tokyo_full,berlin_full,boston_full,nyc_full,london_f
 glimpse(majorMarathons)
 
 saveRDS(majorMarathons, file="majorMarathons.Rda")
+write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
+
 
   #  mutate(ifelse())
 # "Gösta Leandersson" # why cutoff?
