@@ -3,23 +3,18 @@ title: "Analysis"
 output: html_document
 ---
 
-```{r,warning=F,message=F}
+```{r,warning=F,message=F,echo=F}
 library(tidyverse)
 library(ggplot2)
 library(RColorBrewer)
+library(kableExtra)
+#library(gridExtra)
 marathons <- read_rds('majorMarathons.Rda')
-glimpse(marathons)
+#
 ```
 
-```{r cars}
-glimpse(marathons)
-```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
+```{r wins by country, echo=FALSE}
 marathons %>%
   filter(!is.na(country)) %>%
   group_by(country)%>%
@@ -33,43 +28,67 @@ marathons %>%
     ylab("Frequency") +
     ggtitle("Total Major Marathon Wins by Country")
 ```    
- 
-```{r}
+  
+  * Eastern Africa (Kenya, Ethiopa), then "richer" countries (US + UK).
+  
+```{r,echo=F}
  marathons %>%
   filter(!is.na(country)) %>%
   group_by(winner,country,gender)%>%
   summarise(count = n()) %>%
-  arrange(desc(count))
+  arrange(desc(count)) %>%
+  head(10) %>%
+  kable()
 ```
+
+We can see the dominant Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979)
 US not a major marathon power, but bill rodgers most marathon major wins 
-both top males = US + many wins @ boston (give atble)
 
 top 2 females = norwat (waitz = 1st female < 2:30:00)
+
+Kipchofe (arguabyl best of all time, winning past 8 marathons he's raced and won 9/10, w/ 1 2nd place) and Mary Keitany = current runners, 
+
+```{r}
+marathons %>%
+  filter(winner %in% c("Bill Rodgers","Clarence DeMar","Grete Waitz","Ingrid Kristiansen","Paula Radcliffe")) %>%
+  group_by(winner,marathon) %>%
+  summarize(count = n()) %>%
+  kable()
+```
+
+Here we see some the dominance of Grete Waitz at NYC, and the fact that every single marathon major win by Clarence DeMar was in Boston, while Bill Rodgers split his majors between NYC and Boston. Radcliffe split between home crowd of London (WR) and NYC 
+
+top us not successful outside US
 
 ```{r pressure, echo=FALSE}
 marathons %>%
   filter(!is.na(country),
-         year>=1966) %>%
+         year>=1981) %>%
   group_by(country,gender) %>%
   summarise(count = n()) %>%
   arrange(desc(count)) %>%
   filter(count>5) %>%
   ggplot(aes(country,count)) + 
     geom_bar(aes(fill=gender),stat="identity",colour="Black",position="dodge") +
+    scale_fill_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     xlab("Country") + 
     ylab("Frequency") +
-    ggtitle("Total Major Marathon Wins by Country")
+    ggtitle("Total Major Marathon Wins by Country by Gender")
 ```  
+* note filtered to years w/ both women + men, Kenya dominanting, most males + females, Ehtiopsa demales better htanmales, whil emany counties hae female only winners, and MEX and BRAZ only male
+
+UK + US split on gender
+
 
 ```{r}
- marathons %>%
-  filter(!is.na(country),
-         year>=1966) %>%
-  group_by(marathon,gender)%>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
+ #marathons %>%
+ # filter(!is.na(country),
+ #        year>=1966) %>%
+ # group_by(marathon,gender)%>%
+  #summarise(count = n()) %>%
+ # arrange(desc(count))
 
 #marathons %>%
 #  filter(!is.na(country),
@@ -78,55 +97,28 @@ marathons %>%
   #summarise(count = n()) %>%
   #arrange(desc(count)) %>%
   #filter(count>5) %>%
-  ggplot(marathons,aes(x=country)) + 
-    geom_bar() + 
-    coord_cartesian(ylim=c(30,115))
+ # ggplot(marathons,aes(x=country)) + 
+ #   geom_bar() + 
+  #  coord_cartesian(ylim=c(30,115))
 ```
-  aes(y = ..count.., fill=gender),stat="identity",colour="Black",
-             position="dodge") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-    xlab("Country") + 
-    ylab("Frequency") +
-    ggtitle("Total Major Marathon Wins by Country") + 
-  facet_grid(.~marathon)
-
-
-library(data.table)
-mdt <- marathons %>%
-  mutate(year=as.integer(year)) %>%
-  as.data.table()
-dcast.data.table(mdt, country ~ year,
-                           fun.aggregate = count)
 
   
-  
 ```{r}
-filter(marathons,country=="Kenya")[which.min(filter(marathons,country=="Kenya")$year),]
+#filter(marathons,country=="Kenya")[which.min(filter(marathons,country=="Kenya")$year),]
 ```
-
-# wins bykenya by year
-marathons %>%
-  filter(country %in% c("Kenya","Norway","Unites States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
-  group_by(country,year) %>%
-  summarize(count = n()) %>%
-  ggplot(aes(x=year,y=cumsum(count),group=country,color=country)) + 
-    geom_freqpoly(stat = "identity") + 
-  coord_cartesian(xlim=c(1985,2018))
-#length(marathons$year)
-
+1stkenay inner = 1983 Joseph Nzau   Male   Kenya 2018-04-25 02:09:44  Chicago
 
 ```{r}
-marathons %>% 
-  group_by(country, year) %>%
-  summarise(value = n()) %>%
-  mutate(csum = cumsum(value)) %>%
-  group_by(country) %>%
-  summarise(n = max(csum)) %>%
-  arrange(desc(n))
+#marathons %>% 
+  #group_by(country, year) %>%
+  #summarise(value = n()) %>%
+  #mutate(csum = cumsum(value)) %>%
+  #group_by(country) %>%
+  #summarise(n = max(csum)) %>%
+  #arrange(desc(n))
 ```
 
-```{r, warning=F,message=FALSE}
+```{r, warning=F,message=FALSE,echo=F}
 marathons %>% 
   group_by(country, year) %>%
   summarise(value = n()) %>%
@@ -156,44 +148,106 @@ marathons %>%
     ylab("Frequency") +
     ggtitle("Total Major Marathon Wins by Country")
 ```
-compare wiht olympics + world champs?
+ 
+ * must take into account that Boston is much older
+ 
+ hat because East African runners train at high altitudes, they have increased red blood cells which helps them excel at endurance sports. But as Ben Oakley, head of Childhood, Youth and Sport at Open University in Milton Keynes, England, and a former Olympic coach, points out to the BBC, this doesn't explain why there aren't more great runners from the Mexican Andes and from large parts of central Asia.
+
+"My reading suggests the efficiency of an east African runner's light and lean body could be a significant factor," wrote Mr. Oakley.
+
+Some studies have shown that East African runners use less energy compared to Caucasian ones. One reason for this might be that they carry a few less grams on the feet and ankles, wrote Oakley, a feature of the most common body shape in East Africa, which means these runners require less energy to keep a fast pace.
+
+But this is mostly informed speculation; nobody knows for sure.
+
+"Of these explanations the influence of biology is hotly debated, but overall the work ethic needed to succeed at the top level takes place in a social and economic milieu that, for me, is a major influence,” Oakley wrote.
+
+Monday's Boston marathon results come as the World Anti-Doping Agency put Kenya on probation after more than 40 athletes tested positive for performance-enhancing drugs since the 2012 Olympics. Earlier this year, the general secretary of Ethiopia's anti-doping agency said that nine runners from that country, five of them "top athletes," were under investigation for doping. There have been major doping scandals among Russian runners, as well, dealing blows to a sport in the buildup to the Olympics in Rio de Janeiro in August, as USA Today reported.
+
+With their focus on qualifying for the Olympics in Rio, most of the top American runners, including 2014 winner Meb Keflezighi (who is Eritrean-born), sat the Boston Marathon out after running in the US Olympic trials in February.
+
+
+However, recent studies have found no genetic explanation for the East African running phenomenon. One could argue that the genetic argument tends to belittle the accomplishments of these Kenyan and Ethiopian runners, as if their hard work and perseverance mean nothing, and they owe their success to little more than the luck of birth and DNA.
 
 ```{r}
-marathons %>%
+#marathons %>%
+  #group_by(marathon) %>%
+  #summarise(first_year = min(year,na.rm=T))
+```
+
+```{r, warning=F,message=FALSE,echo=F}
+marathons %>% 
+  group_by(country, year) %>%
+  summarise(value = n()) %>%
+  #mutate(csum = cumsum(value)) %>%
   filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
-  ggplot(aes(country,time)) + 
-    geom_jitter(aes(color = country),alpha=.6) +
-    geom_boxplot(aes(fill = country),alpha=.2,outlier.colour = "black") +
+  ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
+    stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
+    geom_point(aes(1984,87),size=3,color="purple") +
+    geom_text(aes(x=1986, label="Joan Benoit (1984)", y=98), colour="black", angle=0,
+              text=element_text(size=.25)) +
+    geom_point(aes(2008,35),size=3,color="#0d98ba") +
+    geom_text(aes(x=2008,y=43,label="Last UK Winner (2008)"), colour="black", angle=0,
+              text=element_text(size=.25)) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    coord_cartesian(xlim=c(1981,2017),ylim=c(0,150)) + 
     xlab("Country") + 
     ylab("Frequency") +
     ggtitle("Total Major Marathon Wins by Country")
 ```
 
-```{r,warning=F,message=F}
+kenyan rise really started in mid-90's + leveled off, UK and most countire below on a pleateau
+
+```{r,echo=F}
+#marathons %>%
+  #group_by(country) %>%
+  #summarize(last_winner = max(year,na.rm=T)) %>%
+  #filter(country=="United Kingdom")
+```
+
+```{r}
+marathons %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  ggplot(aes(country,time)) + 
+    #geom_jitter(aes(color = country),alpha=.6) +
+    geom_boxplot(aes(fill = country),alpha=.2,outlier.colour = "black",varwidth = T) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    xlab("Country") + 
+    ylab("Frequency") +
+    ggtitle("Total Major Marathon time by Country")
+```
+
+norway consistent, west germany not, US not, german not varies
+
+
+```{r,warning=F,message=F,echo=F}
 medianTime <- median(marathons$time,na.rm=T)
 
-is_outlier <- function(x, na.rm=T) {
-  return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
-}
+#is_outlier <- function(x, na.rm=T) {
+#  return(x < quantile(x, 0.25) - 1.5 * IQR(x) | x > quantile(x, 0.75) + 1.5 * IQR(x))
+#}
 
 marathons %>%
   filter(!is.na(time)) %>%
-  mutate(outlier = ifelse(is_outlier(time), year, as.numeric(NA))) %>%
+  #mutate(outlier = ifelse(is_outlier(time), year, as.numeric(NA))) %>%
   ggplot(aes(marathon,time)) + 
-    #geom_jitter(aes(color = marathon),alpha=.6) +
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct("2018-04-24 02:00:00"),as.POSIXct("2018-04-24 03:35:00"))) + 
-    geom_text(aes(label = outlier), na.rm = TRUE, hjust = -0.3)
+    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date()-1,"02:00:00")),as.POSIXct(paste(Sys.Date()-1,"03:35:00"))))
+    # + geom_text(aes(label = outlier), na.rm = TRUE, hjust = -0.3)
 ```
 Outlieres in Bostoin + Berlin
-```{r}
+```{r,echo=F}
 marathons %>%
   ggplot(aes(marathon,time)) + 
-    #geom_jitter(aes(color = marathon),alpha=.6) +
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct("2018-04-24 02:00:00"),as.POSIXct("2018-04-24 03:00:00")))
+    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date()-1,"02:00:00")),as.POSIXct(paste(Sys.Date()-1,"03:00:00"))))
 ```
 
 closest to normal looks like tokyo (disproven by density)
@@ -206,7 +260,7 @@ marathons %>%
   geom_histogram(bins=15,na.rm=T)
 ```
 
-```{r, warning=F,message=F}
+```{r, warning=F,message=F,echo=F}
 marathons %>%
   left_join(marathons %>%
     group_by(year) %>%
@@ -217,14 +271,30 @@ marathons %>%
   geom_smooth()
 ```
 
+```{r, warning=F,message=F,echo=F}
+marathons %>%
+  left_join(marathons %>%
+              group_by(year,gender) %>%
+              summarize(minTime = min(time,na.rm=T)) %>%
+              arrange(year),by = c("year","gender")) %>%
+  select(year,gender,minTime) %>%
+  filter(!is.na(gender),year>=1966) %>%
+  ggplot(aes(year,minTime)) + 
+    geom_line(aes(colour=gender)) +
+  #geom_line(aes(group=gender,colour=gender)) 
+    facet_grid(~gender) 
+    #+  geom_hline(yintercept = as.POSIXct(paste(Sys.Date()-1,"02:17:00")))
+  #+  geom_smooth()
+```
+
 ```{r}
 marathons %>%
   ggplot(aes(time)) + 
   geom_density(aes(group=gender,fill=gender),alpha=.4)
 ```
 
-```{r}
-library(scales)
+```{r,echo=F}
+#library(scales)
 marathons %>%
   #filter(marathon %in% c("Berlin","Boston","Chicago")) %>%
   ggplot() + 
@@ -239,7 +309,7 @@ marathons %>%
 
 Berlin + Chicago = going for time, why bimodal?
 
-```{r}
+```{r,echo=F}
 marathons %>%
  # filter(marathon %in% c("NYC","London","Tokyo")) %>%
   ggplot(aes(year,time,color=marathon)) + 
@@ -248,13 +318,12 @@ marathons %>%
   facet_wrap(~marathon, scales = "free_x")
 ```
 
-```{r}
+```{r,echo=F}
 marathons %>%
  # filter(marathon %in% c("NYC","London","Tokyo")) %>%
   ggplot(aes(year,time,color=marathon)) + 
   geom_smooth(se=F) + 
   #geom_smooth()
   facet_wrap(~marathon) +#, scales = "free_x") + 
-  coord_cartesian(xlim=c(2007,2017),ylim = c(as.POSIXct("2018-04-24 02:00:00"),as.POSIXct("2018-04-24 02:25:00")))
-          
+  coord_cartesian(xlim=c(2007,2017),ylim = c(as.POSIXct(paste(Sys.Date()-1,"02:00:00")),as.POSIXct(paste(Sys.Date()-1,"02:25:00"))))
 ```
