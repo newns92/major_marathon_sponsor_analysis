@@ -188,13 +188,14 @@ boston_full <- boston_full %>%
 #final binding
 majorMarathons <- bind_rows(tokyo_full,berlin_full,boston_full,nyc_full,london_full,chicago_full) %>%
   mutate(year=as.integer(year))
-glimpse(majorMarathons)
+glimpse(majorMarathons) 
+
+londonFemale18 <- c(2018,"Vivian Cheruiyot","Female","Kenya",(paste(Sys.Date()-1,"02:18:31")),"London")
+majorMarathons<-rbind(majorMarathons,londonFemale18)
 
 saveRDS(majorMarathons, file="majorMarathons.Rda")
 write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
 
-
-  #  mutate(ifelse())
 # "Gösta Leandersson" # why cutoff?
 #16 = Michael J. Ryan # middle initial
 #36 = Paul de Bruyn # split last name
@@ -202,4 +203,3 @@ write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
 #74 <- Ron Hill # ! = ???
 #124,125 <- Bobbi Gibb # where did middle a come from?
 #135 <- S.Gayle Barron # middle initial?
-
