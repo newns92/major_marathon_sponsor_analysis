@@ -267,7 +267,8 @@ londong seems fastest (berling + chicago noted for it, but slightly older)
 ```{r}
 marathons %>%
   ggplot(aes(time)) + 
-  geom_histogram(bins=15,na.rm=T)
+  geom_histogram(bins=250,na.rm=T) + 
+  coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00"))))
 ```
 
 ```{r, warning=F,message=F,echo=F}
@@ -278,7 +279,8 @@ marathons %>%
     arrange(year),by = "year") %>%
   ggplot(aes(year,minTime)) + 
   geom_line() + 
-  geom_smooth()
+  geom_smooth() +
+  coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"01:45:00")),as.POSIXct(paste(Sys.Date(),"04:00:00"))))
 ```
 
 ```{r, warning=F,message=F,echo=F}
@@ -318,6 +320,21 @@ marathons %>%
 ```
 
 Berlin + Chicago = going for time, why bimodal?
+
+```{r,echo=F}
+#library(scales)
+marathons %>%
+  #filter(marathon %in% c("Berlin","Boston","Chicago")) %>%
+  ggplot() + 
+  stat_density(aes(x=time,y=..scaled..,group=gender,fill=gender),color="black") + 
+  #geom_histogram(aes(fill=marathon),bins=15) +
+  scale_fill_brewer(palette = "Set2") +
+  facet_wrap(~marathon) + 
+  guides(fill=F) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  #scale_y_continuous() + 
+```
+
 
 ```{r,echo=F}
 marathons %>%
