@@ -10,9 +10,19 @@ library(RColorBrewer)
 library(kableExtra)
 #library(gridExtra)
 marathons <- read_rds('majorMarathons.Rda')
-#
+glimpse(marathons)
 ```
 
+In wake of this year's Boston and London marathons (and their almost polar opposite conditions), there certainly was a lot of press over some historic wins:
+ 
+ * Desi Linden becomeing the first American woamn wot win Boston since 1985
+ * The "People's Champ" Yuki Kawauchi winning his first marathon major
+ * Eluid Kipchoge further cementing himself as (in my opinion) the greatest marathoner ever, winning his 
+ * Vivian Cheruiyot took the women's victory in London, taking advantage of the faltering of other elites such as Mary Keitany and Tirunesh Dibaba who were gunning for Paula Radcliffe's women's world record
+
+() was a liot of pressa abou I thought it'd be fun to do a quick analysis of the current World Marathon Majors. There certainly
+
+The [World Marathon Majors](https://www.worldmarathonmajors.com/) is a collection of six annual marathons (Tokyo, New York, Boston, London, Berlin, Chicago), and sometimes includes the World Championship (held every 2 years by the IAAF) and the Olympic Marathon.
 
 ```{r wins by country, echo=FALSE}
 marathons %>%
@@ -239,7 +249,7 @@ marathons %>%
   #mutate(outlier = ifelse(is_outlier(time), year, as.numeric(NA))) %>%
   ggplot(aes(marathon,time)) + 
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date()-1,"02:00:00")),as.POSIXct(paste(Sys.Date()-1,"03:35:00"))))
+    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00"))))
     # + geom_text(aes(label = outlier), na.rm = TRUE, hjust = -0.3)
 ```
 Outlieres in Bostoin + Berlin
@@ -247,7 +257,7 @@ Outlieres in Bostoin + Berlin
 marathons %>%
   ggplot(aes(marathon,time)) + 
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date()-1,"02:00:00")),as.POSIXct(paste(Sys.Date()-1,"03:00:00"))))
+    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00"))))
 ```
 
 closest to normal looks like tokyo (disproven by density)
@@ -283,7 +293,7 @@ marathons %>%
     geom_line(aes(colour=gender)) +
   #geom_line(aes(group=gender,colour=gender)) 
     facet_grid(~gender) 
-    #+  geom_hline(yintercept = as.POSIXct(paste(Sys.Date()-1,"02:17:00")))
+    #+  geom_hline(yintercept = as.POSIXct(paste(Sys.Date(),"02:17:00")))
   #+  geom_smooth()
 ```
 
@@ -325,5 +335,5 @@ marathons %>%
   geom_smooth(se=F) + 
   #geom_smooth()
   facet_wrap(~marathon) +#, scales = "free_x") + 
-  coord_cartesian(xlim=c(2007,2017),ylim = c(as.POSIXct(paste(Sys.Date()-1,"02:00:00")),as.POSIXct(paste(Sys.Date()-1,"02:25:00"))))
+  coord_cartesian(xlim=c(2007,2017),ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00"))))
 ```

@@ -190,8 +190,13 @@ majorMarathons <- bind_rows(tokyo_full,berlin_full,boston_full,nyc_full,london_f
   mutate(year=as.integer(year))
 glimpse(majorMarathons) 
 
-londonFemale18 <- c(2018,"Vivian Cheruiyot","Female","Kenya",(paste(Sys.Date()-1,"02:18:31")),"London")
-majorMarathons<-rbind(majorMarathons,londonFemale18)
+londonFemale18 <- c(as.integer(2018),"Vivian Cheruiyot","Female","Kenya",(paste(Sys.Date()-1,"02:18:31")),"London")
+
+majorMarathons <- majorMarathons %>% 
+                    rbind(londonFemale18) %>%
+                    mutate(year=as.integer(year))
+
+
 
 saveRDS(majorMarathons, file="majorMarathons.Rda")
 write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
