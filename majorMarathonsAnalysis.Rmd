@@ -113,8 +113,7 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country")
 ```
 
-Kenya's Rise 
-
+Kenya's Rise starting in mid-90's, Ethiopia in early 2000's, Plateaus from other top countires, UK drough in 08 onways, u
 ```{r,echo=F}
  marathons %>%
   filter(!is.na(country)) %>%
@@ -130,7 +129,7 @@ US not a major marathon power, but bill rodgers most marathon major wins
 
 top 2 females = norwat (waitz = 1st female < 2:30:00)
 
-Kipchofe (arguabyl best of all time, winning past 8 marathons he's raced and won 9/10, w/ 1 2nd place) and Mary Keitany = current runners, 
+Current/ative = Kipchofe and Mary Keitany = current runners, 
 
 ```{r}
 marathons %>%
@@ -140,7 +139,7 @@ marathons %>%
   kable()
 ```
 
-Here we see some the dominance of Grete Waitz at NYC, and the fact that every single marathon major win by Clarence DeMar was in Boston, while Bill Rodgers split his majors between NYC and Boston. Radcliffe split between home crowd of London (WR) and NYC 
+Here we see some the dominance of Grete Waitz at NYC, and the fact that every single marathon major win by Clarence DeMar was in Boston, while Bill "Boston Billy" Rodgers actually split his majors wins between NYC and Boston. Radcliffe split between home crowd of London (WR) and NYC 
 
 top us not successful outside US
 
