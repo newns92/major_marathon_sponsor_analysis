@@ -192,19 +192,19 @@ glimpse(majorMarathons)
 
 londonFemale18 <- c(as.integer(2018),"Vivian Cheruiyot","Female","Kenya",(paste(Sys.Date(),"02:18:31")),"London")
 
+# manually add female 2018 london winner because wikipedia
 majorMarathons <- majorMarathons %>% 
                     rbind(londonFemale18) %>%
                     mutate(year=as.integer(year))
 
 
+#saveRDS(majorMarathons, file="majorMarathons.Rda")
+#write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
 
-saveRDS(majorMarathons, file="majorMarathons.Rda")
-write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
-
-# "Gösta Leandersson" # why cutoff?
-#16 = Michael J. Ryan # middle initial
-#36 = Paul de Bruyn # split last name
-#4,5, <- Jack Caffery # nicname
-#74 <- Ron Hill # ! = ???
-#124,125 <- Bobbi Gibb # where did middle a come from?
-#135 <- S.Gayle Barron # middle initial?
+# "Gösta Leandersson":  why cutoff?
+#16 = Michael J. Ryan:  middle initial
+#36 = Paul de Bruyn: split last name
+#4,5, <- Jack Caffery: nickname?
+#74 <- Ron Hill # why a '!'???
+#124,125 <- Bobbi Gibb:  where did middle a come from?
+#135 <- S.Gayle Barron: middle initial?
