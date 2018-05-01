@@ -47,19 +47,19 @@ marathons %>%
     ggtitle("Top 10 Countries in Total World Major Marathon Wins")
 ```    
   
-The common knowledge that Eastern Africa (i.e. Kenya and Ethiopa) are dominanting distance running is clearly displayed in the plot, followed by the United Stats and the UK (One could also choose to combine West Germany and Germany into a single grouping, but for this quick analysis I chose not to). But when did this domination by the East Africans begin?
+The common knowledge that Eastern Africa (i.e. Kenya and Ethiopa) are dominanting distance running is clearly displayed in the plot, followed by the United States, Germany, and the UK. It's pretty easy to see why, after Kenya and Ethiopia, these three countires have the most victores, as five of the six marathons tkae place in these countires. But when did this domination by the East Africans begin?
 
 ```{r, warning=F,message=FALSE,echo=F}
 marathons %>% 
   group_by(country, year) %>%
   summarise(value = n()) %>%
   #mutate(csum = cumsum(value)) %>%
-  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan")) %>%
   ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
     stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
-    stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Ethiopia"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
@@ -82,23 +82,23 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country Over Time")
 ```
 
-With the incredibly imporant caveat that Boston was the only WMM that existed from its initial running in 1897 until 1970 with the first running of the New York Marathon, which makes this chart pretty useless unless we cut down the time period we're looking at. But, before leaving this chart completely, we can note that (chicago = 1977, berlin = 1974, london = 1981, )
+With the incredibly imporant caveat that Boston was the only WMM that existed from its initial running in 1897 until 1970 with the first running of the New York Marathon, which makes this chart pretty useless unless we cut down the time period we're looking at. But, before leaving this chart completely, we can note that German and UK wins started picking up soon after first couple of their respective marathons (chicago = 1977, berlin = 1974, london = 1981, ). We can also note that, along with the estalishof ment of NYC in 70 and CHI in 77, the "Running Boom" in USA is sahped by teh relase of # bowerman = jogging and Frank Shorter's win @ Olyumpics, culminting with Benoit.
 
 ```{r, warning=F,message=FALSE,echo=F}
 marathons %>% 
   group_by(country, year) %>%
   summarise(value = n()) %>%
   #mutate(csum = cumsum(value)) %>%
-  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan")) %>%
   ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
     stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
-    stat_bin(data=subset(marathons,country=="West Germany"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
+    stat_bin(data=subset(marathons,country=="Ethiopia"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
-    scale_fill_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) +
+    scale_color_brewer(palette = "Set2") +
     geom_point(aes(1984,87),size=3,color="purple") +
     geom_text(aes(x=1986, label="Joan Benoit (1984)", y=98), colour="black", angle=0,
               text=element_text(size=.25)) +

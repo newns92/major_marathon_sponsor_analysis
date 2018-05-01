@@ -195,11 +195,13 @@ londonFemale18 <- c(as.integer(2018),"Vivian Cheruiyot","Female","Kenya",(paste(
 # manually add female 2018 london winner because wikipedia
 majorMarathons <- majorMarathons %>% 
                     rbind(londonFemale18) %>%
-                    mutate(year=as.integer(year))
+                    mutate(year=as.integer(year),
+                           country = if_else(country=="West Germany","Germany",
+                                             if_else(country=="East Germany","Germany",country)))
 
 
-#saveRDS(majorMarathons, file="majorMarathons.Rda")
-#write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
+saveRDS(majorMarathons, file="majorMarathons.Rda")
+write.csv(majorMarathons, file = "majorMarathons.csv",row.names=F)
 
 # "Gösta Leandersson":  why cutoff?
 #16 = Michael J. Ryan:  middle initial
