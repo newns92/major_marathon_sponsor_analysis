@@ -8,7 +8,7 @@ library(tidyverse)
 library(ggplot2)
 library(RColorBrewer)
 library(kableExtra)
-#library(gridExtra)
+library(scales) # reversing time y-axis values (https://groups.google.com/forum/#!topic/ggplot2/qrcvqy6TdzI)
 marathons <- read_rds('majorMarathons.Rda')
 #glimpse(marathons)
 ```
@@ -54,7 +54,7 @@ marathons %>%
   group_by(country, year) %>%
   summarise(value = n()) %>%
   #mutate(csum = cumsum(value)) %>%
-  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan")) %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan","Canada")) %>%
   ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
     stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
@@ -63,16 +63,14 @@ marathons %>%
     stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
-    scale_color_brewer(palette = "Set2") +
+    stat_bin(data=subset(marathons,country=="Canada"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
+    scale_color_brewer(palette = "Dark2") +
    # geom_point(aes(1967,37),size=3,color="purple") +  # bowerman = jogging
-   # geom_point(aes(1972,48),size=3,color="purple") +
-    #geom_vline(xintercept=1972) +
-    #geom_text(aes(x=1950, label="Frank Shorter (1972)", y=90), colour="blue", angle=0,
-      #        text=element_text(size=.25)) +
+    geom_point(aes(1971,49),size=3,color="brown") +
+    geom_text(aes(x=1956, label="Frank Shorter (1972)", y=50), colour="brown", angle=0, size=3) +
     #geom_vline(xintercept=1984) + 
-    #geom_point(aes(1984,90),size=3,color="purple") +
-   # geom_text(aes(x=2004, label="Joan Benoit (1984)", y=145), colour="red", angle=0,
-    #          text=element_text(size=.25)) +
+    geom_point(aes(1984,90),size=3,color="brown") +
+    geom_text(aes(x=1968, label="Joan Benoit (1984)", y=92), colour="brown", angle=0, size=3) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     coord_cartesian(ylim=c(0,150),xlim=c(1890,2018)) + 
@@ -82,14 +80,16 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country Over Time")
 ```
 
-With the incredibly imporant caveat that Boston was the only WMM that existed from its initial running in 1897 until 1970 with the first running of the New York Marathon, which makes this chart pretty useless unless we cut down the time period we're looking at. But, before leaving this chart completely, we can note that German and UK wins started picking up soon after first couple of their respective marathons (chicago = 1977, berlin = 1974, london = 1981, ). We can also note that, along with the estalishof ment of NYC in 70 and CHI in 77, the "Running Boom" in USA is sahped by teh relase of # bowerman = jogging and Frank Shorter's win @ Olyumpics, culminting with Benoit.
+With the incredibly imporant caveat that Boston was the only WMM that existed from its initial running in 1897 until 1970 with the first running of the New York Marathon, only those in close proximity (i.e. US and Canada) saw their counts climb. which makes this chart pretty useless unless we cut down the time period we're looking at. But, before leaving this chart completely, we can note that German and UK wins started picking up soon after first couple of their respective marathons (chicago = 1977, berlin = 1974, london = 1981, ). We can also note that, along with the estalishof ment of NYC in 70, th enumber of us winners starts to climb thans to the inclusion of women in Boston + NYC andand jsubt barely predates  Frank Shorter's win @ Olyumpics which is credidted as starting therunning bom of th e70sin america,  culminting with Benoit.
+
+https://www.runnersworld.com/running-times-info/how-the-running-boom-began 
 
 ```{r, warning=F,message=FALSE,echo=F}
 marathons %>% 
   group_by(country, year) %>%
   summarise(value = n()) %>%
   #mutate(csum = cumsum(value)) %>%
-  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan")) %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan","Canada")) %>%
   ggplot(aes(x=year,color=country)) +#,group=country,col=country)) +
     stat_bin(data=subset(marathons,country=="Kenya"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Norway"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
@@ -98,10 +98,10 @@ marathons %>%
     stat_bin(data=subset(marathons,country=="United Kingdom"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="Japan"),aes(y=cumsum(..count..)),geom="line",lwd=1.05)+
     stat_bin(data=subset(marathons,country=="United States"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
-    scale_color_brewer(palette = "Set2") +
-    geom_point(aes(1984,87),size=3,color="purple") +
-    geom_text(aes(x=1986, label="Joan Benoit (1984)", y=98), colour="black", angle=0,
-              text=element_text(size=.25)) +
+    stat_bin(data=subset(marathons,country=="Canada"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
+    scale_color_brewer(palette = "Dark2") +
+    geom_point(aes(1984,90),size=3,color="brown") +
+    geom_text(aes(x=1978, label="Joan Benoit (1984)", y=95), colour="brown", angle=0, size=3) +
     geom_point(aes(2008,35),size=3,color="#0d98ba") +
     geom_text(aes(x=2008,y=43,label="Last UK Winner (2008)"), colour="black", angle=0,
               text=element_text(size=.25)) +
@@ -113,7 +113,8 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country")
 ```
 
-Kenya's Rise starting in mid-90's, Ethiopia in early 2000's, Plateaus from other top countires, UK drough in 08 onways, u
+Kenya's Rise starting in mid-90's, Ethiopia in early 2000's, Plateaus from other top countires, UK drough in 08 onways after 7 wins from Radcliffee over a 6 year span starting in 2002, gmernay having onyl 2 wins in past 20 yers, both in 08'
+
 ```{r,echo=F}
  marathons %>%
   filter(!is.na(country)) %>%
@@ -141,7 +142,9 @@ marathons %>%
 
 Here we see some the dominance of Grete Waitz at NYC, and the fact that every single marathon major win by Clarence DeMar was in Boston, while Bill "Boston Billy" Rodgers actually split his majors wins between NYC and Boston. Radcliffe split between home crowd of London (WR) and NYC 
 
-top us not successful outside US
+top us not so successful internationally
+
+Going back to the initial wins by country bar chart, we can split it by gender, filtered down to years in which both men and women competed for a clearer picture.
 
 ```{r pressure, echo=FALSE}
 marathons %>%
@@ -160,98 +163,44 @@ marathons %>%
     ylab("Frequency") +
     ggtitle("Total Major Marathon Wins by Country by Gender")
 ```  
-* note filtered to years w/ both women + men, Kenya dominanting, most males + females, Ehtiopsa demales better htanmales, whil emany counties hae female only winners, and MEX and BRAZ only male
 
-UK + US split on gender
+Kenya still dominantes, having the most males + females winners, while the female runners of Ehtiopsa have performed better htan the males. Many counties hae female only winners (such as the dominance of Waitz and Kristiansen for and Pippig for Germany, while MEX and BRAZ only malw winners. UK + US split on gender
 
-
-```{r}
- #marathons %>%
- # filter(!is.na(country),
- #        year>=1966) %>%
- # group_by(marathon,gender)%>%
-  #summarise(count = n()) %>%
- # arrange(desc(count))
-
-#marathons %>%
-#  filter(!is.na(country),
-#         year>=1966) %>%
-  #group_by(country,gender) %>%
-  #summarise(count = n()) %>%
-  #arrange(desc(count)) %>%
-  #filter(count>5) %>%
- # ggplot(marathons,aes(x=country)) + 
- #   geom_bar() + 
-  #  coord_cartesian(ylim=c(30,115))
-```
-
-  
-```{r}
-#filter(marathons,country=="Kenya")[which.min(filter(marathons,country=="Kenya")$year),]
-```
-1stkenay inner = 1983 Joseph Nzau   Male   Kenya 2018-04-25 02:09:44  Chicago
+### Time
 
 ```{r}
-#marathons %>% 
-  #group_by(country, year) %>%
-  #summarise(value = n()) %>%
-  #mutate(csum = cumsum(value)) %>%
-  #group_by(country) %>%
-  #summarise(n = max(csum)) %>%
-  #arrange(desc(n))
-```
-
- 
- * must take into account that Boston is much older
- 
- hat because East African runners train at high altitudes, they have increased red blood cells which helps them excel at endurance sports. But as Ben Oakley, head of Childhood, Youth and Sport at Open University in Milton Keynes, England, and a former Olympic coach, points out to the BBC, this doesn't explain why there aren't more great runners from the Mexican Andes and from large parts of central Asia.
-
-"My reading suggests the efficiency of an east African runner's light and lean body could be a significant factor," wrote Mr. Oakley.
-
-Some studies have shown that East African runners use less energy compared to Caucasian ones. One reason for this might be that they carry a few less grams on the feet and ankles, wrote Oakley, a feature of the most common body shape in East Africa, which means these runners require less energy to keep a fast pace.
-
-But this is mostly informed speculation; nobody knows for sure.
-
-"Of these explanations the influence of biology is hotly debated, but overall the work ethic needed to succeed at the top level takes place in a social and economic milieu that, for me, is a major influence,” Oakley wrote.
-
-Monday's Boston marathon results come as the World Anti-Doping Agency put Kenya on probation after more than 40 athletes tested positive for performance-enhancing drugs since the 2012 Olympics. Earlier this year, the general secretary of Ethiopia's anti-doping agency said that nine runners from that country, five of them "top athletes," were under investigation for doping. There have been major doping scandals among Russian runners, as well, dealing blows to a sport in the buildup to the Olympics in Rio de Janeiro in August, as USA Today reported.
-
-With their focus on qualifying for the Olympics in Rio, most of the top American runners, including 2014 winner Meb Keflezighi (who is Eritrean-born), sat the Boston Marathon out after running in the US Olympic trials in February.
 
 
-However, recent studies have found no genetic explanation for the East African running phenomenon. One could argue that the genetic argument tends to belittle the accomplishments of these Kenyan and Ethiopian runners, as if their hard work and perseverance mean nothing, and they owe their success to little more than the luck of birth and DNA.
+c_trans <- function(a, b, breaks = b$breaks, format = b$format) {
+  a <- as.trans(a)
+  b <- as.trans(b)
 
-```{r}
-#marathons %>%
-  #group_by(marathon) %>%
-  #summarise(first_year = min(year,na.rm=T))
-```
+  name <- paste(a$name, b$name, sep = "-")
 
+  trans <- function(x) a$trans(b$trans(x))
+  inv <- function(x) b$inverse(a$inverse(x))
 
+  trans_new(name, trans, inv, breaks, format)
+}
 
-kenyan rise really started in mid-90's + leveled off, UK and most countire below on a pleateau
+rev_date <- c_trans("reverse", "time")
 
-```{r,echo=F}
-#marathons %>%
-  #group_by(country) %>%
-  #summarize(last_winner = max(year,na.rm=T)) %>%
-  #filter(country=="United Kingdom")
-```
-
-```{r}
 marathons %>%
-  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","West Germany","Japan")) %>%
+  filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan","Canada")) %>%
   ggplot(aes(country,time)) + 
     #geom_jitter(aes(color = country),alpha=.6) +
-    geom_boxplot(aes(fill = country),alpha=.2,outlier.colour = "black",varwidth = T) +
+    geom_boxplot(aes(fill = country),alpha=.5,outlier.colour = "black",varwidth = T) +
+    scale_fill_brewer(palette = "Dark2") +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     xlab("Country") + 
     ylab("Frequency") +
-    ggtitle("Total Major Marathon time by Country")
+    ggtitle("Total Major Marathon time by Country") + 
+    guides(fill=F) + 
+    scale_y_continuous(trans = rev_date)
 ```
 
-norway consistent, west germany not, US not, german not varies
+US variability was predictiable to be as its beens it has Boston ahs longset runninga n marathon times have dropped as years have gone by. Germany's wide variance is something to note I wuoldhtink, since Berlin is known as a faster course. This could definitely be something to look futher into. Norway and Canada both have very little variabliity in winning times, and coincidentally have one slow and one fast outlier, albeint with with lower sample sizes than Kenya, US. Norway also appears ot be a bit skewed, with its median winnign time being more towards the 3rd quartile. The US has the slowest outliers, ignoring the one german one. But Kenya's dominance contiues with fastes median win eimte, (wiht a skew) while UK and Japan both seem sto be faster than Ehtiopoa, but Ethipoua just has hasppned to win more.
 
 
 ```{r,warning=F,message=F,echo=F}
@@ -266,30 +215,55 @@ marathons %>%
   #mutate(outlier = ifelse(is_outlier(time), year, as.numeric(NA))) %>%
   ggplot(aes(marathon,time)) + 
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00"))))
-    # + geom_text(aes(label = outlier), na.rm = TRUE, hjust = -0.3)
+    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00")))) + 
+    guides(fill=F) + 
+    theme_bw() + 
+    scale_y_continuous(trans = rev_date)
 ```
-Outlieres in Bostoin + Berlin
+
+Boston slwo confirming US outliers + variabliity, chicaho bretty slow, Berlin used to be slow? Londong fastet, followed by Chicago. Overall pretty even.. Cut down on outlerus
+
 ```{r,echo=F}
 marathons %>%
+  filter(!is.na(time)) %>%
   ggplot(aes(marathon,time)) + 
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00"))))
+    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
+    guides(fill=F) + 
+    theme_bw() + 
+    scale_y_continuous(trans = rev_date)
 ```
 
 closest to normal looks like tokyo (disproven by density)
 all similar variance (height)
 londong seems fastest (berling + chicago noted for it, but slightly older)
+all between 2:10-2:30
+
+Let's look at histogram of all times
 
 ```{r}
 marathons %>%
+  filter(!is.na(time)) %>%
   ggplot(aes(time)) + 
-  geom_histogram(bins=250,na.rm=T) + 
-  coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00"))))
+  geom_histogram(bins=125,na.rm=T) + 
+  coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
+  theme_bw()
 ```
+
+Bimodal, expecting du eto gender. with majory of wining times being in the mid 2:20's (probs women) and lower 2:10's (probs men)
+
+```{r}
+marathons %>%
+  filter(!is.na(time)) %>%
+  ggplot(aes(time)) + 
+  geom_density(aes(group=gender,fill=gender),alpha=.4)
+```
+
+Confirming above hyptheis, both v. right-skewed
 
 ```{r, warning=F,message=F,echo=F}
 marathons %>%
+  filter(!is.na(time)) %>%
   left_join(marathons %>%
     group_by(year) %>%
     summarize(minTime = min(time,na.rm=T)) %>%
@@ -297,11 +271,15 @@ marathons %>%
   ggplot(aes(year,minTime)) + 
   geom_line() + 
   geom_smooth() +
-  coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"01:45:00")),as.POSIXct(paste(Sys.Date(),"04:00:00"))))
+  coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"01:45:00")),as.POSIXct(paste(Sys.Date(),"04:00:00")))) + 
+  theme_bw()
 ```
+
+Slow and steady fastest times by year, coming to almost a standstill in the 80's
 
 ```{r, warning=F,message=F,echo=F}
 marathons %>%
+  filter(!is.na(time)) %>%
   left_join(marathons %>%
               group_by(year,gender) %>%
               summarize(minTime = min(time,na.rm=T)) %>%
@@ -316,15 +294,12 @@ marathons %>%
   #+  geom_smooth()
 ```
 
-```{r}
-marathons %>%
-  ggplot(aes(time)) + 
-  geom_density(aes(group=gender,fill=gender),alpha=.4)
-```
+Again filtering down to allowing women to start, the start quite slow, but have a remarkably quick drop in times between 1970 and 1980 before returning to a pattern resembling the men's of a slow decline
 
 ```{r,echo=F}
 #library(scales)
 marathons %>%
+  filter(!is.na(time)) %>%
   #filter(marathon %in% c("Berlin","Boston","Chicago")) %>%
   ggplot() + 
   stat_density(aes(x=time,y=..scaled..,fill=marathon),color="black") + 
@@ -336,38 +311,74 @@ marathons %>%
   #scale_y_continuous() + 
 ```
 
-Berlin + Chicago = going for time, why bimodal?
+
 
 ```{r,echo=F}
 #library(scales)
 marathons %>%
+  filter(!is.na(time)) %>%
   #filter(marathon %in% c("Berlin","Boston","Chicago")) %>%
   ggplot() + 
-  stat_density(aes(x=time,y=..scaled..,group=gender,fill=gender),color="black") + 
+  geom_density(aes(x=time,y=..scaled..,group=gender,fill=gender),alpha=.4) + 
+  #stat_density(aes(x=time,y=..scaled..,group=gender,fill=gender),color="black", alpha=.5) + 
   #geom_histogram(aes(fill=marathon),bins=15) +
-  scale_fill_brewer(palette = "Set2") +
+  #scale_fill_brewer(palette = "Set2") +
+  scale_fill_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) +
   facet_wrap(~marathon) + 
   guides(fill=F) + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  #scale_y_continuous() + 
+```
+all quite similar except Boston having its slow males in early years. Look at when all men + women allowed
+
+```{r,echo=F}
+#library(scales)
+marathons %>%
+  filter(!is.na(country),
+         year>=1981) %>%
+  #filter(marathon %in% c("Berlin","Boston","Chicago")) %>%
+  ggplot() + 
+  geom_density(aes(x=time,y=..scaled..,group=gender,fill=gender),alpha=.4) + 
+  #stat_density(aes(x=time,y=..scaled..,group=gender,fill=gender),color="black", alpha=.5) + 
+  #geom_histogram(aes(fill=marathon),bins=15) +
+  #scale_fill_brewer(palette = "Set2") +
+  scale_fill_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) +
+  facet_wrap(~marathon) + 
+  guides(fill=F) + 
+  theme_bw() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
   #scale_y_continuous() + 
 ```
 
+Boston + NYC very tight densities around similar times, Tokyo males quite consistent, Berin, CHI, Londong quite similar, 
 
 ```{r,echo=F}
 marathons %>%
+  filter(!is.na(time)) %>%
  # filter(marathon %in% c("NYC","London","Tokyo")) %>%
   ggplot(aes(year,time,color=marathon)) + 
-  geom_smooth() + 
-  #geom_smooth()
-  facet_wrap(~marathon, scales = "free_x")
+    geom_smooth() + 
+    scale_fill_brewer(palette = "Set2") +
+    #geom_smooth()
+    facet_wrap(~marathon, scales = "free_x") +
+    theme_bw()
 ```
 
+Tokyo's infancy = more variabliieyt, Berling consistent decrase, Londong quite steady with slight decrease, NYC steep drop to steayd, chicaho slowly deceaset, Boston has slight upticks in 60's and now
+
+Look at all since inception of Tokyo: 
 ```{r,echo=F}
 marathons %>%
+  filter(!is.na(time)) %>%
  # filter(marathon %in% c("NYC","London","Tokyo")) %>%
   ggplot(aes(year,time,color=marathon)) + 
-  geom_smooth(se=F) + 
-  #geom_smooth()
-  facet_wrap(~marathon) +#, scales = "free_x") + 
-  coord_cartesian(xlim=c(2007,2017),ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00"))))
+    geom_smooth(se=F) + 
+    theme_bw() + 
+    #geom_smooth()
+    facet_wrap(~marathon) +#, scales = "free_x") + 
+    coord_cartesian(xlim=c(2007,2018),
+                    ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00"))))
 ```
+
+London quite the same, BARELY going down, Berling slowly going down, NYC + Chicaco v. similar in keeping steay with BARELY increase, Bostong acutally getting lsower, TOkyo goign down faster in this smaller window, maybe due to it's "newness" just starting to attract the top talent to race
