@@ -25,11 +25,11 @@ After everything seemed to have settled down a bit, I thought it'd be fun to do 
 
 ## What are the World Marathon Majors?
 
-The [World Marathon Majors](https://www.worldmarathonmajors.com/) is a collection of six annual marathons: Tokyo, New York, Boston, London, Berlin, Chicago. And in the requisite??? years, includes the World Championship (held every 2 years by the IAAF) and the Olympic Marathon. The races are run as a series and the male and female athlete who score the most points from the qualifying races are crowned the champions of the series (defined as the points from a max of two of the qualifying races). For us non-elites, we can quality as a Six Star Finisher, wherein after successfully completing all six of the World Marathon Majors, would recieve an official certificate and Six Star Finisher Medal.
+The [World Marathon Majors (WMM)](https://www.worldmarathonmajors.com/) is a collection of six annual marathons: Tokyo, New York, Boston, London, Berlin, Chicago. And in the designated years, they also include the World Championship (held every 2 years by the IAAF) and the Olympic Marathon. The races are run as a series and the male and female athlete who score the most points from the qualifying races are crowned the champions of the series ("most points" is defined as the sum of points from a max of two of the qualifying races). For us non-elites, we can qualify as a **Six Star Finisher**, wherein after successfully completing all six of the WMM's, you can recieve an official certificate and Six Star Finisher Medal.
 
 ### EDA
 
-After scraping Wikipedia for the past winners of the races and cleaning up the data, I had a [nice data file](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) consisting of, for each race, the marathon, the winner, the year, the winner's gender, and the winner's time. A quick first plot to look at could be the count of WMM wins by country.
+After scraping Wikipedia for the past winners of the races and cleaning up the data (inclduing having to manually add the female winner for London 2018, Vivian Cheruiyot, since it still wasn't added over a week later, because Wikipedia?), I had a [nice data file](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) consisting of, for each race, the marathon, the winner, the year, the winner's gender, and the winner's time. A quick first plot to look at could be the count of WMM wins by country.
 
 ```{r wins by country, echo=F, message=F, warning=F, fig.align='center'}
 marathons %>%
@@ -47,7 +47,7 @@ marathons %>%
     ggtitle("Top 10 Countries in Total World Major Marathon Wins")
 ```    
   
-The common knowledge that Eastern Africa (i.e. Kenya and Ethiopa) are dominanting distance running is clearly displayed in the plot, followed by the United States, Germany, and the UK. It's pretty easy to see why, after Kenya and Ethiopia, these three countires have the most victores, as five of the six marathons tkae place in these countires. But when did this domination by the East Africans begin?
+The general consensus that Eastern Africa (i.e. Kenya and Ethiopa) is dominanting long distance running is clearly displayed in this plot, with countries with the next most wins being the United States, Germany, and the UK. It's pretty easy infer why, after Kenya and Ethiopia, these three countires have the most victories. Five of the six major marathons take place in these countries, which most likely results in a larger amount of runners from the host country paritciating relative to other countries, providing said home countries with more chances of producing the victor.But when did this domination by the East Africans begin?
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>% 
@@ -65,10 +65,10 @@ marathons %>%
     stat_bin(data=subset(marathons,country=="Canada"),aes(y=cumsum(..count..)),geom="line",lwd=1.05) +
     scale_color_brewer(palette = "Dark2") +
    # geom_point(aes(1967,37),size=3,color="purple") +  # bowerman = jogging
-    geom_point(aes(1971,49),size=2,color="#7e7e7e") +
+    geom_point(aes(1971,49),size=3,color="#7e7e7e") +
     geom_text(aes(x=1955, label="Frank Shorter (1972)", y=50), colour="#7e7e7e", angle=0, size=3) +
-    geom_point(aes(1983,90),size=2,color="#7e7e7e") +
-    geom_text(aes(x=1968, label="Joan Benoit (1984)", y=92), colour="#7e7e7e", angle=0, size=3) +
+    geom_point(aes(1983,90),size=3,color="#7e7e7e") +
+    geom_text(aes(x=1968, label="Joan Benoit (1984)", y=90), colour="#7e7e7e", angle=0, size=3) +
     coord_cartesian(ylim=c(0,150),xlim=c(1890,2018)) +   
     scale_x_continuous(breaks=seq(1900, 2020, 20)) +   
     theme_bw() +
@@ -78,10 +78,11 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country Over Time")
 ```
 
-With the incredibly imporant caveat that Boston was the only WMM that existed from its initial running in 1897 until 1970 with the first running of the New York Marathon, only those in close proximity (i.e. US and Canada) saw their counts climb. which makes this chart pretty useless unless we cut down the time period we're looking at. But, before leaving this chart completely, we can note that German and UK wins started picking up soon after first couple of their respective marathons (chicago = 1977, berlin = 1974, london = 1981, ). We can also note that, along with the estalishof ment of NYC in 70, th enumber of us winners starts to climb thans to the inclusion of women in Boston + NYC andand jsubt barely predates  Frank Shorter's win @ Olyumpics which is credidted as starting therunning bom of th e70sin america,  culminting with Benoit.
+Noting the *incredibly important caveat* that Boston was the only marathon in the current WMM's that existed from its initial running in 1897 until the first running of the New York City Marathon in 1970, I believe it's safe to assume the fact that international travel was not as accessible and common in this time period is why only individuals from countries in close proximity to these races (i.e. US and Canada) saw their counts climb. This makes this chart pretty useless unless we cut down the time period that we are looking at. 
 
-https://www.runnersworld.com/running-times-info/how-the-running-boom-began 
+But, before leaving this chart completely, we can note that German and UK wins started picking up soon after the first couple of their respective marathons, with Berlin starting in 1974 and London in 1981, respectively. We can also note that, along with the establishment of the NYC Marathon in 1970, the number of US winners starts to climb much faster throughout the 1970's, thanks to the inclusion of women in the Boston and NYC marathons. The start of this spike also just barely predates Frank Shorter's gold medal at the 1972 Olympics, which is credidted as starting the running boom of the 1970's America, which is said to have culminated with Joan Benoit Samuelson's gold medal in the 1984 Olympics.
 
+But now onto the limited time period:
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>% 
   group_by(country, year) %>%
@@ -102,7 +103,10 @@ marathons %>%
     geom_text(aes(x=1978, label="Joan Benoit ('84)", y=95), colour="#7e7e7e", angle=0, size=3) +
     geom_point(aes(2008,35),size=3,color="brown") +
     geom_text(aes(x=2006,y=43,label="Last UK Win ('08)"), colour="brown", angle=0, size=3) + 
-    coord_cartesian(xlim=c(1970,2017),ylim=c(0,150)) + 
+    geom_point(aes(1983,2),size=3,color="green") +
+    geom_text(aes(x=1983,y=-2,label="First Kenya Win"), colour="green", angle=0, size=3) + 
+    coord_cartesian(xlim=c(1970,2018),ylim=c(0,150)) + 
+  geom_vline(xintercept=2017) + 
     theme_bw() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     xlab("Country") + 
@@ -110,7 +114,7 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country")
 ```
 
-Kenya's Rise starting in mid-90's, Ethiopia in early 2000's, Plateaus from other top countires, UK drough in 08 onways after 7 wins from Radcliffee over a 6 year span starting in 2002, gmernay having onyl 2 wins in past 20 yers, both in 08'
+Here, we see that the first Kenyan winner was in 1983, but the country's rise in marathon victories did not kick-start until the mid-1990's. Ethiopia started a bit later, with their first victory in 1989 and their uptick in victories starting in early 2000's, Plateaus from other top countires, UK drough in 08 onways after 7 wins from Radcliffee over a 6 year span starting in 2002, gmernay having onyl 2 wins in past 20 yers, both in 08'
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
  marathons %>%
@@ -122,10 +126,10 @@ Kenya's Rise starting in mid-90's, Ethiopia in early 2000's, Plateaus from other
   kable()
 ```
 
-We can see the dominant Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979)
-US not a major marathon power, but bill rodgers most marathon major wins 
+We can see the dominant Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979), who, along with fellow Norwegian Ingri Kristiansesn, make up the top 2 women and 2 of the top 3 overall. It also appears that although Kenya has many wins, they are more spread out, as we do not see a  Kenyan runner in the top 10 total wins until Catherine Nderebe. 
 
-top 2 females = norwat (waitz = 1st female < 2:30:00)
+
+Rosa? check portual's overall statsuss
 
 Current/ative = Kipchofe and Mary Keitany = current runners, 
 
