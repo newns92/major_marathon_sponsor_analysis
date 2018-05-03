@@ -183,22 +183,22 @@ marathons %>%
   theme_bw()
 ```
 
-We can see there was a mildly slow-but-steady decline over the years until the mid-1980's wherein the decrease starts to slow, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can break out all winning times out by winning country to see how those distributions come out.
+We can see there was a mild, slow-but-steady decline over the years until the mid-1980's wherein the decrease starts to slow, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can break out all winning times out by winning country to see how those distributions come out.
 
 ```{r, warning=F, message=F, echo=F, fig.align='center'}
-c_trans <- function(a, b, breaks = b$breaks, format = b$format) {
-  a <- as.trans(a)
-  b <- as.trans(b)
+#c_trans <- function(a, b, breaks = b$breaks, format = b$format) {
+#  a <- as.trans(a)
+ # b <- as.trans(b)
 
-  name <- paste(a$name, b$name, sep = "-")
+ # name <- paste(a$name, b$name, sep = "-")
 
-  trans <- function(x) a$trans(b$trans(x))
-  inv <- function(x) b$inverse(a$inverse(x))
+ # trans <- function(x) a$trans(b$trans(x))
+ # inv <- function(x) b$inverse(a$inverse(x))
 
-  trans_new(name, trans, inv, breaks, format)
-}
+ # trans_new(name, trans, inv, breaks, format)
+#}
 
-rev_date <- c_trans("reverse", "time")
+#rev_date <- c_trans("reverse", "time")
 
 marathons %>%
   filter(country %in% c("Kenya","Norway","United States","United Kingdom","Germany","Ethiopia","Japan","Canada")) %>%
@@ -211,11 +211,11 @@ marathons %>%
     xlab("Country") + 
     ylab("Frequency") +
     ggtitle("Total Major Marathon time by Country") + 
-    guides(fill=F) + 
-    scale_y_continuous(trans = rev_date)
+    guides(fill=F) 
+    #+ scale_y_continuous(trans = rev_date)
 ```
 
-I'd say the larger relative variability in US is understandable when accounting for the fact that many of these winners won at some point during long history of Boston, many occuring before marathon times started significantly to drop. The US has the slowest outliers, ignoring the one German outlier. Germany's wide variance is something to note, for me at least. It is my understanding that runners go to Chicago or Berlin for time, as they are said to be flatter and therefore faster courses. I would think more Germans would've been running here, and therefore would've had quicker times with not too much variabilitiy, but weather could be a factor here. We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway also appears to be a bit skewed, with its median winnign time being more towards the 3rd quartile. But, again, Kenya's contiuest to perform better than other countries, having the fastest median win time (again, with a skew). Then, while the UK and Japan both seem to have faster winning times than Ehtiopoa, Ethipoua in fact wins more races. This isn't so surprising since many major marthons are run with the tactical intent to win the race and not so much with a focus on having a very fast time.
+I'd say the larger relative variability in US is understandable when accounting for the fact that many of these winners won at some point during long history of Boston, many occuring before marathon times started significantly to drop. The US has the slowest outliers, ignoring the one German outlier. Germany's wide variance is something to note, for me at least. It is my understanding that runners go to Chicago or Berlin for time, as they are said to be flatter and therefore faster courses. I would think more Germans would've been running here, and therefore would've had quicker times with not too much variabilitiy, but weather could be a factor here. We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway also appears to be a bit skewed, with its median winnign time being more towards the 3rd quartile. But, again, Kenya's contiuest to perform better than other countries, having the fastest median win time (again, with a skew). Then, while the UK and Japan both seem to have faster winning times than Ehtiopoa, Ethipoua in fact wins more races. This isn't so surprising since many major marathons are run with the tactical intent to win the race and not so much with a focus on having a very fast time.
 
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
@@ -227,8 +227,8 @@ marathons %>%
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
     coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00")))) + 
     guides(fill=F) + 
-    theme_bw() + 
-    scale_y_continuous(trans = rev_date)
+    theme_bw()
+    #+ scale_y_continuous(trans = rev_date)
 ```
 
 Boston slwo confirming US outliers + variabliity, chicaho bretty slow, Berlin used to be slow? Londong fastet, followed by Chicago. Overall pretty even.. Cut down on outlerus
@@ -240,8 +240,8 @@ marathons %>%
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
     coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
     guides(fill=F) + 
-    theme_bw() + 
-    scale_y_continuous(trans = rev_date)
+    theme_bw() 
+    #+ scale_y_continuous(trans = rev_date)
 ```
 
 closest to normal looks like tokyo (disproven by density)
@@ -291,8 +291,6 @@ marathons %>%
     facet_grid(~gender) +
     guides(fill=F) +
     theme_bw()
-    
-    
 ```
 
 Again filtering down to allowing women to start, the start quite slow, but have a remarkably quick drop in times between 1970 and 1980 before returning to a pattern resembling the men's of a slow decline
