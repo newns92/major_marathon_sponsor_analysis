@@ -17,7 +17,7 @@ marathons <- read_rds('majorMarathons.Rda')
 In wake of this year's Boston and London marathons (and their almost polar opposite conditions), there certainly was a lot of press over some historic wins:
  
  * Desi Linden becomeing the first American woamn wot win Boston since 1985
- * The "People's Champ" Yuki Kawauchi winning his first marathon major
+ * The "People's Champ" Yuki Kawauchi winning his first marathon major (first japanaes  since ????)
  * Eluid Kipchoge further cementing himself as (in my opinion) the greatest marathoner ever, winning his 8th straight marathon, and his 9th out of a total of 10 (It's also important to note his only 2nd place was behind what ended up being a world record time).
  * Vivian Cheruiyot took the women's victory in London, taking advantage of the faltering of other elites such as Mary Keitany and Tirunesh Dibaba who were gunning for Paula Radcliffe's women's world record
 
@@ -137,7 +137,7 @@ marathons %>%
 ```
 
 Here we note the dominance of Grete Waitz at NYC with *nine* wins. The fact that every single marathon major win by Clarence DeMar was in Boston isn't that intersting, as it was the only WMM around in during his career in the early 20th century (seven marathon wins is still impressive, nonehteless). Meanwhile, Bill "Boston Billy" Rodgers actually split his WMM wins between NYC and Boston, and Paula Radcliffe split six of her seven wins between home nation of London (where she also set the current women's world record) and NYC.
-```{r, eval=F}
+```{r, eval=F, echo=F}
 # future = US in international?
 ```
 
@@ -167,9 +167,24 @@ Next, we can look at some visualizations concerning the winning times.
 
 ### Time
 
-The first thing I wanted to look at was the trend of the fastest winning times per year over the entire time period of the dataset:
+The first thing I wanted to look at was the trend of the fastest winning times per year over the entire time period of the dataset (I chose fastest winning times because in a plot of all time values, the sudden inclusion of women in the early 1970's produced an incredible wild-looking right-hand side of the plot):
 
-```{r, warning=F,message=F,echo=F, fig.align='center'}
+
+```{r, eval=F, warning=F,message=F,echo=F, fig.align='center'}
+marathons %>%
+  filter(!is.na(time)) %>%
+ # left_join(marathons %>%
+   # group_by(year) %>%
+   # summarize(minTime = min(time,na.rm=T)) %>%
+   #arrange(year),by = "year") %>%
+  ggplot(aes(year,time)) + 
+  geom_line() + 
+  geom_smooth() +
+  coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:30:00")))) + 
+  theme_bw()
+```
+
+```{r, eval=F, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
   filter(!is.na(time)) %>%
   left_join(marathons %>%
@@ -183,7 +198,26 @@ marathons %>%
   theme_bw()
 ```
 
-We can see there was a mild, slow-but-steady decline over the years until the mid-1980's wherein the decrease starts to slow, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can break out all winning times out by winning country to see how those distributions come out.
+We can see there was a mild, slow-but-steady decline over the years until the mid-1980's wherein the decrease starts to slow, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can also split this out by gender and limiting to years when both men and women competed.
+
+```{r, warning=F,message=F,echo=F, fig.align='center'}
+marathons %>%
+  filter(!is.na(time)) %>%
+  left_join(marathons %>%
+              group_by(year,gender) %>%
+              summarize(minTime = min(time,na.rm=T)) %>%
+              arrange(year),by = c("year","gender")) %>%
+  select(year,gender,minTime) %>%
+  filter(!is.na(gender),year>=1966) %>%
+  ggplot(aes(year,minTime)) + 
+    geom_line(aes(colour=gender)) +
+    scale_color_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) + 
+    facet_grid(~gender) +
+    guides(fill=F) +
+    theme_bw()
+```
+
+It appears the winning women to started out quite slow relative to their current times, and there was a remarkably quick drop in fastest winning times between 1970 and 1980 before returning to a pattern of a slow decline resembling the men's plot. We can break out all winning times out by winning country to see how those distributions come out.
 
 ```{r, warning=F, message=F, echo=F, fig.align='center'}
 #c_trans <- function(a, b, breaks = b$breaks, format = b$format) {
@@ -215,7 +249,7 @@ marathons %>%
     #+ scale_y_continuous(trans = rev_date)
 ```
 
-I'd say the larger relative variability in US is understandable when accounting for the fact that many of these winners won at some point during long history of Boston, many occuring before marathon times started significantly to drop. The US has the slowest outliers, ignoring the one German outlier. Germany's wide variance is something to note, for me at least. It is my understanding that runners go to Chicago or Berlin for time, as they are said to be flatter and therefore faster courses. I would think more Germans would've been running here, and therefore would've had quicker times with not too much variabilitiy, but weather could be a factor here. We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway also appears to be a bit skewed, with its median winnign time being more towards the 3rd quartile. But, again, Kenya's contiuest to perform better than other countries, having the fastest median win time (again, with a skew). Then, while the UK and Japan both seem to have faster winning times than Ehtiopoa, Ethipoua in fact wins more races. This isn't so surprising since many major marathons are run with the tactical intent to win the race and not so much with a focus on having a very fast time.
+I'd say the larger relative variability in US is understandable when accounting for the fact that many of these winners won at some point during long history of Boston, many occuring before marathon times started significantly to drop. The US has the slowest outliers, ignoring the one German outlier. Germany's wide variance is something to note, for me at least. It is my understanding that runners go to Chicago or Berlin for time, as they are said to be flatter and therefore faster courses. I would think more Germans would've been running here, and therefore would've had quicker times with not too much variabilitiy, but weather could be a factor here. We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway also appears to be a bit skewed, with its median winnign time being more towards the 3rd quartile. But, again, Kenya's contiuest to perform better than other countries, having the fastest median win time (again, with a skew). Then, while the UK and Japan both seem to have faster winning times than Ehtiopoa, Ethipoua in fact wins more races. This isn't so surprising since many major marathons are run with the tactical intent to win the race and not so much with a focus on having a very fast time. Speaking of which, let's look at the times with respect to the races themselves.
 
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
@@ -231,36 +265,30 @@ marathons %>%
     #+ scale_y_continuous(trans = rev_date)
 ```
 
-Boston slwo confirming US outliers + variabliity, chicaho bretty slow, Berlin used to be slow? Londong fastet, followed by Chicago. Overall pretty even.. Cut down on outlerus
+So, Boston and NYC appear the be the slowest of the WMM's, with the slowerst third quartile time and slowerst median times. This makes sense as they are both known for their tough hills. The "fast" marathons in Chicago and Berline seem almost identicat, with Berlin have a coupel more slower outleirs. And, recalling my oirignla assumaption that Beling and Chicahog were faster, it looks like London is actually the race to run if one is looking for a faster time, with the lowest median time and the fact that this median skews towards the first quartile. Overall, the variability among marathons seems quite even, as we can see from the heights of each box **all between 2:10-2:30***. From this plot, Tokyo also looks to have quite a normal distribtion, but that remains to be confirmed via a histogram or density plot, which we can move onto now 
 
-```{r, warning=F,message=F,echo=F, fig.align='center'}
-marathons %>%
-  filter(!is.na(time)) %>%
-  ggplot(aes(marathon,time)) + 
-    geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
-    guides(fill=F) + 
-    theme_bw() 
+
+```{r, eval=F, warning=F,message=F,echo=F, fig.align='center'}
+#marathons %>%
+#  filter(!is.na(time)) %>%
+#  ggplot(aes(marathon,time)) + 
+#    geom_boxplot(aes(fill = marathon),alpha=.4, outlier.shape = NA,varwidth = T) +   
+#    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
+#    guides(fill=F) + 
+#    theme_bw() 
     #+ scale_y_continuous(trans = rev_date)
 ```
-
-closest to normal looks like tokyo (disproven by density)
-all similar variance (height)
-londong seems fastest (berling + chicago noted for it, but slightly older)
-all between 2:10-2:30
-
-Let's look at histogram of all times
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
   filter(!is.na(time)) %>%
   ggplot(aes(time)) + 
-  geom_histogram(bins=125,na.rm=T,fill="blue") + 
-  coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
+  geom_histogram(bins=100,na.rm=T,fill="blue") + 
+  #coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
   theme_bw()
 ```
 
-Bimodal, expecting du eto gender. with majory of wining times being in the mid 2:20's (probs women) and lower 2:10's (probs men)
+So we see the Bimodal nature of the histogram, almost certainyl due to differeneces in gender gender. We can see that the majorityy of winning times is in the mid 2:20's for the women and in the lower 2:10's for the men.
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
@@ -271,29 +299,7 @@ marathons %>%
   theme_bw()
 ```
 
-Confirming above hyptheis, both v. right-skewed
-
-
-Slow and steady fastest times by year, coming to almost a standstill in the 80's
-
-```{r, warning=F,message=F,echo=F, fig.align='center'}
-marathons %>%
-  filter(!is.na(time)) %>%
-  left_join(marathons %>%
-              group_by(year,gender) %>%
-              summarize(minTime = min(time,na.rm=T)) %>%
-              arrange(year),by = c("year","gender")) %>%
-  select(year,gender,minTime) %>%
-  filter(!is.na(gender),year>=1966) %>%
-  ggplot(aes(year,minTime)) + 
-    geom_line(aes(colour=gender)) +
-    scale_color_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) + 
-    facet_grid(~gender) +
-    guides(fill=F) +
-    theme_bw()
-```
-
-Again filtering down to allowing women to start, the start quite slow, but have a remarkably quick drop in times between 1970 and 1980 before returning to a pattern resembling the men's of a slow decline
+Indeed this density confirms my pretty obvious assumption, we further higlights the large right-skew of both distributions. We can split these density plots out by marathon, both overall and also by gender.
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
@@ -337,6 +343,17 @@ marathons %>%
 
 Boston + NYC very tight densities around similar times, Tokyo males quite consistent, Berin, CHI, Londong quite similar, 
 
+Look at all since inception of Tokyo: 
+```{r, warning=F,message=F,echo=F, fig.align='center'}
+marathons %>%
+  filter(!is.na(time)) %>%
+  ggplot(aes(year,time,color=marathon)) + 
+    geom_smooth(se=F) + 
+    theme_bw() + 
+    facet_wrap(~marathon, scales = "free_x")# +
+    #coord_cartesian(xlim=c(2007,2018),
+    #                ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00"))))
+```
 
 Tokyo's infancy = more variabliieyt, Berling consistent decrase, Londong quite steady with slight decrease, NYC steep drop to steayd, chicaho slowly deceaset, Boston has slight upticks in 60's and now
 
