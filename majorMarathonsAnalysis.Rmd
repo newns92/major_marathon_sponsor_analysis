@@ -29,7 +29,7 @@ The [World Marathon Majors (WMM)](https://www.worldmarathonmajors.com/) is a col
 
 ### EDA
 
-After scraping Wikipedia for the past winners of the races and cleaning up the data (inclduing having to manually add the female winner for London 2018, Vivian Cheruiyot, since it still wasn't added over a week later, because Wikipedia?), I had a [nice data file](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) consisting of, for each race, the marathon, the winner, the year, the winner's gender, and the winner's time. A quick first plot to look at could be the count of WMM wins by country.
+After scraping Wikipedia for the past winners of the races and cleaning up the data (inclduing having to manually add the female winner for London 2018, Vivian Cheruiyot, since it still wasn't added over a week later, because Wikipedia?), I had a [nice data file](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) consisting of, for each race, the marathon, the winner, the year, the winner's gender, and the winner's time. A quick first plot to look at could be the top 10 counts of WMM wins by country.
 
 ```{r wins by country, echo=F, message=F, warning=F, fig.align='center'}
 marathons %>%
@@ -126,28 +126,24 @@ Here, we see that the first Kenyan winner was in 1983, but the country's rise in
   kable()
 ```
 
-We can see the dominant Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979), who, along with fellow Norwegian Ingri Kristiansesn, make up the top 2 women and 2 of the top 3 overall. It also appears that although Kenya has many wins, they are more spread out, as we do not see a  Kenyan runner in the top 10 total wins until Catherine Nderebe. 
-
-
-Rosa? check portual's overall statsuss
-
-Current/ative = Kipchofe and Mary Keitany = current runners, 
+We can see Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979), alone at the top of leaderboard, and who, along with fellow dominant Norwegian Ingrid Kristiansen, make up the top 2 women, and 2 of the top 3 runners overall in terms of WMM wins. It also appears that although Kenya has many WMM wins in aggregate, it is quite spread out, as we do not see a Kenyan runner in the top 10 total wins until Catherine Nderebe. But, Kipchoge and Keitany are still active marathoners, and it's never a safe bet to count them out of any race. Let's look at the top 5 runners here and where their WMM wins occured.
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
-  filter(winner %in% c("Bill Rodgers","Clarence DeMar","Grete Waitz","Ingrid Kristiansen","Paula Radcliffe")) %>%
+  filter(winner %in% c("Bill Rodgers","Clarence DeMar","Grete Waitz","Ingrid Kristiansen","Paula Radcliffe","Uta Pippig")) %>%
   group_by(winner,marathon) %>%
   summarize(count = n()) %>%
   kable()
 ```
 
-Here we see some the dominance of Grete Waitz at NYC, and the fact that every single marathon major win by Clarence DeMar was in Boston, while Bill "Boston Billy" Rodgers actually split his majors wins between NYC and Boston. Radcliffe split between home crowd of London (WR) and NYC 
+Here we note the dominance of Grete Waitz at NYC with *nine* wins. The fact that every single marathon major win by Clarence DeMar was in Boston isn't that intersting, as it was the only WMM around in during his career in the early 20th century (seven marathon wins is still impressive, nonehteless). Meanwhile, Bill "Boston Billy" Rodgers actually split his WMM wins between NYC and Boston, and Paula Radcliffe split six of her seven wins between home nation of London (where she also set the current women's world record) and NYC.
+```{r, eval=F}
+# future = US in international?
+```
 
-top us not so successful internationally
+Going back to that initial wins-by-country bar chart, we can split it out by gender, filtered down to the years in which both men and women competed and to having more than 5 wins for either gender in order to get a clearer picture of the distribution.
 
-Going back to the initial wins by country bar chart, we can split it by gender, filtered down to years in which both men and women competed for a clearer picture.
-
-```{r , warning=F,message=F,echo=F, fig.align='center'}
+```{r warning=F, message=F, echo=F, fig.align='center'}
 marathons %>%
   filter(!is.na(country),
          year>=1981) %>%
@@ -165,11 +161,31 @@ marathons %>%
     ggtitle("Total Major Marathon Wins by Country by Gender")
 ```  
 
-Kenya still dominantes, having the most males + females winners, while the female runners of Ehtiopsa have performed better htan the males. Many counties hae female only winners (such as the dominance of Waitz and Kristiansen for and Pippig for Germany, while MEX and BRAZ only malw winners. UK + US split on gender
+So, Kenya clearly still reigns supreme, having the most male and females champions, while the female runners of Ethiopia, as well those in Japan, have performed better than their male counterparts. Many countries have had female winners only (see the dominance of Waitz and Kristiansen in Norway's count and Uta Pippig's in Germany), while Mexico and Brazil are the only countries with at least 5 wins and all were males. Then we have the UK and US being split in the wins by gender.
+
+Next, we can look at some visualizations concerning the winning times.
 
 ### Time
 
+The first thing I wanted to look at was the trend of the fastest winning times per year over the entire time period of the dataset:
+
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
+marathons %>%
+  filter(!is.na(time)) %>%
+  left_join(marathons %>%
+    group_by(year) %>%
+    summarize(minTime = min(time,na.rm=T)) %>%
+    arrange(year),by = "year") %>%
+  ggplot(aes(year,minTime)) + 
+  geom_line() + 
+  geom_smooth() +
+  coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
+  theme_bw()
+```
+
+We can see there was a mildly slow-but-steady decline over the years until the mid-1980's wherein the decrease starts to slow, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can break out all winning times out by winning country to see how those distributions come out.
+
+```{r, warning=F, message=F, echo=F, fig.align='center'}
 c_trans <- function(a, b, breaks = b$breaks, format = b$format) {
   a <- as.trans(a)
   b <- as.trans(b)
@@ -199,7 +215,7 @@ marathons %>%
     scale_y_continuous(trans = rev_date)
 ```
 
-US variability was predictiable to be as its beens it has Boston ahs longset runninga n marathon times have dropped as years have gone by. Germany's wide variance is something to note I wuoldhtink, since Berlin is known as a faster course. This could definitely be something to look futher into. Norway and Canada both have very little variabliity in winning times, and coincidentally have one slow and one fast outlier, albeint with with lower sample sizes than Kenya, US. Norway also appears ot be a bit skewed, with its median winnign time being more towards the 3rd quartile. The US has the slowest outliers, ignoring the one german one. But Kenya's dominance contiues with fastes median win eimte, (wiht a skew) while UK and Japan both seem sto be faster than Ehtiopoa, but Ethipoua just has hasppned to win more.
+I'd say the larger relative variability in US is understandable when accounting for the fact that many of these winners won at some point during long history of Boston, many occuring before marathon times started significantly to drop. The US has the slowest outliers, ignoring the one German outlier. Germany's wide variance is something to note, for me at least. It is my understanding that runners go to Chicago or Berlin for time, as they are said to be flatter and therefore faster courses. I would think more Germans would've been running here, and therefore would've had quicker times with not too much variabilitiy, but weather could be a factor here. We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway also appears to be a bit skewed, with its median winnign time being more towards the 3rd quartile. But, again, Kenya's contiuest to perform better than other countries, having the fastest median win time (again, with a skew). Then, while the UK and Japan both seem to have faster winning times than Ehtiopoa, Ethipoua in fact wins more races. This isn't so surprising since many major marthons are run with the tactical intent to win the race and not so much with a focus on having a very fast time.
 
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
@@ -239,7 +255,7 @@ Let's look at histogram of all times
 marathons %>%
   filter(!is.na(time)) %>%
   ggplot(aes(time)) + 
-  geom_histogram(bins=125,na.rm=T,fill="blue",) + 
+  geom_histogram(bins=125,na.rm=T,fill="blue") + 
   coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
   theme_bw()
 ```
@@ -257,19 +273,6 @@ marathons %>%
 
 Confirming above hyptheis, both v. right-skewed
 
-```{r, warning=F,message=F,echo=F, fig.align='center'}
-marathons %>%
-  filter(!is.na(time)) %>%
-  left_join(marathons %>%
-    group_by(year) %>%
-    summarize(minTime = min(time,na.rm=T)) %>%
-    arrange(year),by = "year") %>%
-  ggplot(aes(year,minTime)) + 
-  geom_line() + 
-  geom_smooth() +
-  coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"01:45:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
-  theme_bw()
-```
 
 Slow and steady fastest times by year, coming to almost a standstill in the 80's
 
@@ -336,16 +339,6 @@ marathons %>%
 
 Boston + NYC very tight densities around similar times, Tokyo males quite consistent, Berin, CHI, Londong quite similar, 
 
-```{r, warning=F,message=F,echo=F, fig.align='center'}
-marathons %>%
-  filter(!is.na(time)) %>%
-  ggplot(aes(year,time,color=marathon)) + 
-    geom_smooth() + 
-    scale_fill_brewer(palette = "Set2") +
-    facet_wrap(~marathon, scales = "free_x") +
-    theme(legend.position="none") +
-    theme_bw()
-```
 
 Tokyo's infancy = more variabliieyt, Berling consistent decrase, Londong quite steady with slight decrease, NYC steep drop to steayd, chicaho slowly deceaset, Boston has slight upticks in 60's and now
 
