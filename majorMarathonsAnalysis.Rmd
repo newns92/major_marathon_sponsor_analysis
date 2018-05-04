@@ -13,6 +13,7 @@ library(RColorBrewer) # new ggplot colors
 library(kableExtra) # "pretty" tables
 library(scales) # reversing time y-axis values (https://groups.google.com/forum/#!topic/ggplot2/qrcvqy6TdzI)
 
+####### RUN THE SCRAPE AND CLEAN SCRIPT BEFORE RUNNING DUE TO GGPLOT SCALING FUNCTIONS INVOLVING SYS.DATE()
 marathons <- read_rds('majorMarathons.Rda')
 #glimpse(marathons)
 ```
