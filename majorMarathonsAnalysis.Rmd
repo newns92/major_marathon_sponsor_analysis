@@ -22,18 +22,18 @@ In wake of this year's Boston and London marathons (and their almost polar oppos
  
  * Desi Linden becoming the first American woman to win Boston since 1985
  * The "Citizen Runner" Yuki Kawauchi winning his first marathon major (also the first Japanese man in to win Boston in 31 years)
- * Eliud Kipchoge further cementing himself as (in my opinion) the greatest marathoner ever, winning his 8th straight marathon, and his 9th out of a total of 10 marathons (It's also important to note his only 2nd place was behind what ended up being a world record time)
- * Vivian Cheruiyot took the women's victory in London, taking advantage of the faltering of other elites such as Mary Keitany and Tirunesh Dibaba who were gunning for Paula Radcliffe's women's world record
+ * Eliud Kipchoge further cementing himself as one of the greatest marathoners ever (and in my opinion, *the* greatest), winning his 8th straight marathon, and his 9th out of a total of 10 marathons (It's also important to note this sole 2nd place finish was behind what ended up being a world record time)
+ * Vivian Cheruiyot took the women's victory in London, taking advantage of the faltering of other elites such as Mary Keitany and Tirunesh Dibaba who battled the heat while gunning for Paula Radcliffe's women's world record
 
-Everything seems to have settled down a bit for the spring marathon season, but I thought it'd be fun to do a cursory analysis of the winners of the six current World Marathon Majors so far.
+Everything seems to have settled down a bit for the spring marathon season, but I thought it'd be fun to do a cursory analysis of the winners of the six current World Marathon Majors.
 
-## What are the World Marathon Majors?
+### What *are* the World Marathon Majors?
 
-The [World Marathon Majors (WMM)](https://www.worldmarathonmajors.com/) is a collection of six annual marathons: Tokyo, New York City, Boston, London, Berlin, and Chicago. And, in designated years, they also include the World Championship (held every 2 years by the IAAF) and the Olympic Marathons. The races are run as a series and the male and female athlete who score the most points from the qualifying races are crowned the champions of the series ("most points" is defined as the sum of points from a max of two of the qualifying races). For us non-elites, you can qualify as a **Six Star Finisher**, wherein after successfully completing all six of the WMM's, you can recieve an official certificate and Six Star Finisher Medal.
+The [World Marathon Majors (WMM)](https://www.worldmarathonmajors.com/) is a collection of six annual marathons: Tokyo, New York City, Boston, London, Berlin, and Chicago. And, in designated years, they also include the World Championship (held every 2 years by the IAAF) and the Olympic Marathons. The races are run as a series, and the male and female athletes who score the most points from the qualifying races are crowned the champions of the series ("most points" is defined as the sum of points from a max of two of the qualifying races). For us non-elites, you can qualify as a **Six Star Finisher**, wherein after successfully completing all six of the WMM's, you can recieve an official certificate and Six Star Finisher Medal.
 
-### EDA
+### Some EDA
 
-After scraping Wikipedia for the past winners of the races and cleaning up the data (including having to manually add the female winner for London 2018, Vivian Cheruiyot, since it still wasn't added over a week later, because Wikipedia?), I had a [nice data file](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) consisting of, for each race, the marathon, the winner, the year, the winner's gender, and the winner's time. For a quick first plot to look at, I decided on the top 10 countries in terms of WMM wins.
+After scraping Wikipedia for the past winners of the six races and cleaning up the data (including having to manually add the female winner for London 2018, Vivian Cheruiyot, since it still wasn't added over a week later, because Wikipedia?), I had a [nice data file](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) consisting of, for each race, the marathon, the winner, the year, the winner's gender, and the winner's time. For a quick first plot to look at, I decided on the top 10 countries in terms of WMM wins.
 
 ```{r wins by country, echo=F, message=F, warning=F, fig.align='center'}
 marathons %>%
@@ -48,7 +48,7 @@ marathons %>%
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     xlab("Country") + 
     ylab("Wins") +
-    ggtitle("Top 10 Countries in Total World Major Marathon Wins")
+    ggtitle("Top 10 Countries in Total World Marathon Major Wins")
 ```    
   
 The general awareness that Eastern Africa (i.e. Kenya and Ethiopa) is dominating long distance running is clearly backed up in this plot, and we see the countries with the next most wins being the US, Germany, the UK, and Japan. It's pretty easy infer a guess as to why, after Kenya and Ethiopia, these specific countries have the most victories. Five of the six major marathons take place in these countries, which I'm guessing likely results in a larger amount of runners from the host country participating, relative to other countries, providing said home countries with more chances of producing the victor. But when did this domination by the East Africans begin?
@@ -84,7 +84,7 @@ marathons %>%
 
 Noting the *incredibly important caveat* that Boston was the only marathon in the current WMM's that existed from its initial running in 1897 until the first running of the New York City Marathon in 1970, I believe it's safe to assume the fact that international travel was not as accessible and common in this time period is why only individuals from countries in close proximity to these races (i.e. US and Canada) saw their counts climb. This makes this chart pretty useless unless we narrow down on the time period that we are looking at. 
 
-But, before leaving this chart completely, we can note that German and UK wins started picking up soon after the first couple of their respective marathons, with Berlin starting in 1974 and London in 1981, respectively. The initial plateau for the US and Canada looks to start realtively close to the start of Japan's win count. We can also note that the number of US winners starts to climb exponentially throughout the 1970's, I would assume thanks to the establishment of the NYC and Chicago marathons in this decade, along with the inclusion of women in the Boston marathon. The start of this spike also just barely predates Frank Shorter's gold medal at the 1972 Olympics, which is credited as starting the running boom of the 1970's in the US, which then is said to have culminated with Joan Benoit Samuelson's gold medal in the 1984 Olympics.
+But, before leaving this chart completely, we can note that German and UK wins started picking up soon after the first couple of their respective marathons, with Berlin starting in 1974 and London in 1981, respectively. The initial plateau for the US and Canada around the 1950's looks to start relatively close to the start of Japan's win count. We can also note that the number of US winners starts to climb exponentially throughout the 1970's, I would assume thanks to the establishment of the NYC and Chicago marathons in this decade, along with the inclusion of women in the Boston marathon. The start of this spike also just barely predates Frank Shorter's gold medal at the 1972 Olympics, which is credited as starting the running boom of the 1970's in the US, which then is said to have culminated with Joan Benoit Samuelson's gold medal in the 1984 Olympics.
 
 But now, onto the limited time period:
 
@@ -119,7 +119,7 @@ marathons %>%
     ggtitle("Cumulative Major Marathon Wins by Country Over Time (1970-2018)")
 ```
 
-Here, we see that the first Kenyan win was in 1983, but the country's rise in marathon victories did not kick-start until the early-to-mid-1990's. Ethiopia's win count started a bit later, with their first victory in 1989 and their uptick in victories starting in early 2000's. We also see some plateaus from the other top countries, with the UK being in a drought since 2008, after 7 wins from Radcliffe over a 6 year span that started in 2002. Germany has just 2 wins in past 20 years, with both of them also occuring in 2008.
+Here, we see that the first Kenyan win was in 1983, but the country's rise in marathon victories did not kick-start until the early-to-mid-1990's. Ethiopia's win count started a bit later, with their first victory in 1989 and their uptick in victories starting in early 2000's. We also see some plateaus from the other top countries, with the UK being in a drought since 2008, after 7 wins from Paula Radcliffe over a 6 year span that started in 2002. Germany has just 2 wins in past 20 years, with both of them also occuring in 2008.
 
 Next, I decided to look at who has won the most WMM's.
 
@@ -133,7 +133,7 @@ Next, I decided to look at who has won the most WMM's.
   kable()
 ```
 
-We can see that Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979) is alone at the top of leaderboard, and who, along with fellow dominant Norwegian Ingrid Kristiansen, make up the top 2 women, and 2 of the top 3 runners overall, in terms of WMM wins. It also appears that although Kenya has many WMM wins in aggregate, the total must be quite spread out, as we do not see a Kenyan runner in the top 10 total wins until the tie between Catherine Nderebe, Kipchoge, and Keitany. Kipchoge and Keitany are still actively racing, however, and it's never a safe bet to count them out of any race. Let's take the top 5 runners here and see where their WMM wins occured.
+We can see that Grete Waitz (the first woman to run the marathon under 2:30:00, in NYC in 1979) is alone at the top of leaderboard, and who, along with fellow dominant Norwegian Ingrid Kristiansen, make up the top two women, and two of the top three runners overall, in terms of WMM wins. It also appears that although Kenya has many WMM wins in aggregate, the total must be quite spread out, as we do not see a Kenyan runner in the top 10 total wins until the tie between Catherine Nderebe, Kipchoge, and Keitany. Kipchoge and Keitany are still actively racing, however, and it's never a safe bet to count them out of any race. Let's take the top five runners here and see where their WMM wins occured.
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
@@ -143,7 +143,7 @@ marathons %>%
   kable()
 ```
 
-Waitz was certainly partial to NYC, totaling with *nine* wins (out of a total of 10 races). The fact that every single marathon major win by Clarence DeMar was in Boston isn't that interesting, as it was the only WMM around during his career in the early 20th century (seven marathon wins is obviously still impressive, nonetheless). Meanwhile, Bill "Boston Billy" Rodgers actually split his WMM wins between NYC and Boston, and Paula Radcliffe split six of her seven wins between her home nation's race (where she also set the current women's world record) and NYC.
+Waitz was certainly partial to NYC, totaling *nine* wins (out of a total of ten attempts in NYC). The fact that every single marathon major win by Clarence DeMar was in Boston isn't that interesting, as it was the only WMM around during his career in the early 20th century (seven marathon wins is obviously still impressive, nonetheless). Meanwhile, Bill "Boston Billy" Rodgers actually split his WMM wins between NYC and Boston, and Paula Radcliffe split six of her seven wins between her home nation's race (where she also set the current women's world record) and NYC.
 
 ```{r, eval=F, echo=F}
 # future = US in international?
@@ -154,7 +154,7 @@ Going back to that initial wins-by-country bar chart, we can split it out by gen
 ```{r warning=F, message=F, echo=F, fig.align='center'}
 marathons %>%
   filter(!is.na(country),
-         year>=1981) %>%
+         year>=1966) %>%
   group_by(country,gender) %>%
   summarise(count = n()) %>%
   arrange(desc(count)) %>%
@@ -166,10 +166,11 @@ marathons %>%
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
     xlab("Country") + 
     ylab("Frequency") +
-    ggtitle("Total Major Marathon Wins by Country by Gender (At least 5 wins)")
+    ggtitle("Total Major Marathon Wins by Country by Gender (1966-2018)") + 
+    labs(subtitle="***At least 5 wins")
 ```  
 
-So, Kenya clearly still reigns supreme, having the most male and females champions, while the female runners of Ethiopia and Japan, have performed better than their male counterparts. Many countries have had only female winners (see again the dominance of Waitz and Kristiansen in Norway's count, Uta Pippig's in Germany, and Rosa Mota for Portugal), while Mexico and Brazil are the only countries with at least 5 wins that were all males. Then we have the UK and US being evenly split in wins by gender.
+So, Kenya clearly still reigns supreme, having the most male and female winners, while the female runners of Ethiopia and Germany have performed better than their male counterparts. Many countries have had only female winners (see again the dominance of Waitz and Kristiansen in Norway's count and Rosa Mota for Portugal's), while Mexico and Brazil are the only countries with at least five wins that were all males. Then we have Japan, the UK, and the US being evenly split in wins by gender, with a slight favor to the women for the US.
 
 Next, we can look at some visualizations concerning the winning times.
 
@@ -206,10 +207,10 @@ marathons %>%
     theme_bw() + 
     xlab("Year") + 
     ylab("Time (HH:MM)") +
-    ggtitle("Trend of Fastest Winning WMM Time by Year (1987-2018)")
+    ggtitle("Trend of Fastest Winning WMM Time by Year (1897-2018)")
 ```
 
-We can see there was a steady, mild decline over the years until the mid-1980's wherein the decrease starts to level off, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can also split out all winning times by gender and limiting to years when both men and women competed.
+We can see there was a steady, mild decline over the years until the mid-1980's wherein the decrease starts to level off a bit, suggesting that there are only marginal gains to come for the fastest winning WMM times in the future. We can also split out all winning times by gender and limiting to years when both men and women competed.
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
@@ -238,33 +239,38 @@ marathons %>%
   filter(!is.na(time)) %>%
   ggplot(aes(year,time,color=marathon)) + 
     geom_smooth(se=F) + 
+    scale_color_brewer(palette = "Set2") +
     theme_bw() + 
+    guides(colour = "none") +
     facet_wrap(~marathon, scales = "free_x") +
     #coord_cartesian(xlim=c(2007,2018),
     #                ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00"))))
     xlab("Year") + 
     ylab("Time (HH:MM)") +
-    ggtitle("Trend of Winning Times by Year by Marathon (1987-2018)")  
+    ggtitle("Trend of Winning Times by Year by Marathon (1897-2018)")  
 ```
 
-We *could* suggest that the low initial time for the Tokyo marathon here could be due to its relatively recent inception into an era of fast marathons, but the fact that London started about 20 years earlier doesn't give that theory too much credence. London winning times also appear to had gotten *slower* in the 1st 15 years of the race before starting a steady decline to a now current plateau. We also see an incredible drop in winning times in Berlin, and Chicago and NYC have a similar, but less, severe pattern. Boston has quite the variability, with a noticeable *upticks* in the 60's and and in the most recent years. A different look at this data could be to look at these trends soley since Tokyo was introduced:
+We *could* suggest that the low initial time for the Tokyo marathon here could be due to its relatively recent inception into an era of fast marathons, but the fact that London started about twenty years earlier and is even lower doesn't give that theory too much credence. London winning times also appear to had gotten *slower* in the first fifteen years of the race before starting a steady decline to a now current plateau. We also see an incredible drop in winning times in Berlin, and Chicago and NYC have a similar, but less, severe pattern. Boston has quite the variability, with a noticeable *upticks* in the 60's and and in the most recent years. A different look at this data could be to look at these trends soley since Tokyo was introduced:
 
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
   filter(!is.na(time)) %>%
   ggplot(aes(year,time,color=marathon)) + 
-    geom_smooth(se=F) + 
+    geom_smooth(se=F) +
+    scale_color_brewer(palette = "Set2") +
     theme_bw() + 
     facet_wrap(~marathon) +
+    guides(colour = "none") +
     coord_cartesian(xlim=c(2007,2018),
                     ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00")))) + 
     xlab("Year") + 
     ylab("Time (HH:MM)") +
-    ggtitle("Trend of Winning Times by Year by Marathon (2007-2018)")  
+    ggtitle("Trend of Winning Times by Year by Marathon (2007-2018)")  +
+    guides(fill=F) 
 ```
 
-The majority of winning WMM times have a quite level trend for the past decade, with the exception of the decrease for Tokyo (possibly as more top marathoners started to take part in the new race) and the *increase* in Boston times over the past decade. London and Berlin winning times are *barely* decreasing, but not significantly going down, while NYC and Chicago have the same trend but in the opposite direction.
+The majority of winning WMM times have quite a level trend for the past decade, with the exception of the decrease for Tokyo (possibly as more top marathoners started to take part in the new race) and the *increase* in Boston times over the past decade. London and Berlin winning times are *barely* decreasing, while NYC and Chicago have the same trend but in the opposite direction.
 
 We can now break out all winning times out by winning country in boxplots to see how those distributions come out.
 
@@ -298,9 +304,9 @@ marathons %>%
     #+ scale_y_continuous(trans = rev_date)
 ```
 
-I'd say the larger relative variability in the US box is understandable, when accounting for the fact that many of these winners won during the early years of the long history of Boston before marathon times started to significantly drop. This could also explain the fact that the US has the slowest outliers, excluding that one German outlier. Germany's wide variance is something to note, for me at least. It was my understanding that runners go to Chicago or Berlin is going for a fast time, as they are the flatter, and therefore faster, courses. I would think more Germans would've been running in Berlin, and therefore would've had quicker times with not too much variabilitiy. But, maybe the weather could be a factor here, and it could be something to look into. 
+I'd say the larger relative variability in the US box is understandable, when accounting for the fact that many of these winners won during the early years of the long history of Boston before marathon times started to significantly drop. Germany's wide variance is something to note, for me at least. It was my understanding that runners go to Chicago or Berlin is going for a fast time, as they are the flatter, and therefore one would think faster, courses. I would think more Germans would've been running in Berlin, and therefore would've had quicker times with not too much variabilitiy. But, maybe the weather could be a factor here, and it could be something to look into. 
 
-We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both countries have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway's distribution also appears to be a bit skewed, with its median winning time being located more towards the faster quartile. Also , again, Kenya continues to perform better than other countries, having the fastest median win time (again, with a possible skew). Then, while the UK and Japan both seem to have faster winning times than Ehtiopoa if going by the median time, Ethiopia, in fact, wins more races. This isn't so surprising since many major marathons are run with the intent of executing some tactical strategy in order to win the race and not so much with a focus on having a very fast time. 
+We can see Norway and Canada winners both have very little variabliity in winning times, and coincidentally both countries have one slow and one fast outlier, albeit with with lower sample sizes than Kenya, Ethiopia, and the US. Norway's distribution also appears to be a bit skewed, with its median winning time being located more towards the faster quartile. Also, again, Kenya continues to perform better than other countries, having the fastest median win time (again, with a possible skew). Then, while the UK and Japan both seem to have faster winning times than Ethiopia if going by the median time, Ethiopia, in fact, wins more races. This isn't so surprising since many major marathons are run with the intent of executing some tactical strategy in order to win the race and not so much with a focus on having a very fast time. 
 
 Speaking of which, let's look at the times with respect to the races themselves.
 
@@ -311,16 +317,17 @@ marathons %>%
   filter(!is.na(time)) %>%
   ggplot(aes(marathon,time)) + 
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
+    scale_fill_brewer(palette = "Set2") +
     coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00")))) + 
     guides(fill=F) + 
     theme_bw() + 
-    xlab("Country") + 
+    xlab("Marathon") + 
     ylab("Time (HH:MM)") +
-    ggtitle("World Marathon Major Winning Times by Country") # + 
+    ggtitle("World Marathon Major Winning Times by Marathon") # + 
     #+ scale_y_continuous(trans = rev_date)
 ```
 
-So, Boston and NYC appear to be the slowest of the WMM's, with higher (i.e. slower) quartiles and higher median times. This makes sense to me, as they're both known for their tough hills. The "fast" marathons in Chicago and Berlin seem almost identical to me, with Berlin have a couple more of the slower outliers. But, it looks like, rather than Berlin and Chicago, *London* is actually the race to run if one is looking for a faster time, having the lowest (i.e. fastest) median time, and the fact that this median skews towards the faster quartile. Overall, the variability among marathons seems quite even, as we can see from the heights of each box being constrained between 2:10 and 2:30. From this plot, Tokyo also looks to have quite a normal distribtion, but that remains to be confirmed via a histogram or density plot, which we can move onto now.
+So, Boston and NYC appear to be the slowest of the WMM's, with higher (i.e. slower) quartiles and higher median times. This makes sense to me, as they're both known for their tough hills. The "fast" marathons in Chicago and Berlin seem almost identical to me, with Berlin have a couple more of the slower outliers. But, it looks like, rather than Berlin and Chicago, *London* is actually the race to run if one is looking for a faster time, having the lowest (i.e. fastest) median time, and the fact that this median skews towards the faster quartile. Overall, the variability among marathons seems quite even, as we can see from the heights of all boxes sans Boston being constrained between 2:10 and 2:30. From this plot, Tokyo also looks to have quite a normal distribtion, but that remains to be confirmed via a histogram or density plot, which we can move onto now.
 
 ```{r, eval=F, warning=F,message=F,echo=F, fig.align='center'}
 #marathons %>%
@@ -370,7 +377,7 @@ marathons %>%
   kable()
 ```
 
-Okay, so the peak of the women's time distribution was in the mid 2:20's and the men's was actually right at 2:10, and the distributions had remarkably close standard deviations of about 19 minutes. We can split these density plots out by marathon, both overall and also by gender.
+Okay, so the peak of the women's time distribution was in the mid 2:20's and the men's was actually right at 2:10, and the distributions had remarkably close standard deviations of about 19 minutes. We can split these density plots out by marathon, both overall and also then by gender.
 
 First, just by marathon:
 
@@ -379,7 +386,7 @@ marathons %>%
   filter(!is.na(time)) %>%
   ggplot() + 
     stat_density(aes(x=time,y=..scaled..,fill=marathon),color="black") + 
-    scale_fill_brewer(palette = "Dark2") +
+    scale_fill_brewer(palette = "Set2") +
     facet_wrap(~marathon) + 
     guides(fill=F) + 
     theme_bw() + 
@@ -403,7 +410,7 @@ marathons %>%
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     xlab("Time (HH:MM)") + 
     ylab("Density") +
-    ggtitle("Densities of Winning Times by Marathon by Gender ")  
+    ggtitle("Densities of Winning Times by Marathon by Gender (1897-2018)")
 ```
 
 It seems that Boston's long history has caused a bimodal distribution to develop even just for the male winning times, and not solely for overall times. Also, recalling the fact that the boxplots for London and Tokyo were the 2 marathons with no outliers, we can see that they are the only two density plot pairs here without a pronounced right tail. It appears that NYC has two very non-variable (skinny) modes, along with multiple very small bumps going down the x-axis to the right, suggesting outliers there occur more sparsely. The males in Chicago, Berlin, London, and Tokyo all have skinnier densities as well, indicating less variety in winning times for males in these marathons in comparison to the females, whose densities are quite wider. For another picture, we can, again, filter down to just years where both men and women competed.
@@ -411,19 +418,22 @@ It seems that Boston's long history has caused a bimodal distribution to develop
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
   filter(!is.na(country),
-         year>=1981) %>%
+         year>=1966) %>%
   ggplot() + 
     geom_density(aes(x=time,y=..scaled..,group=gender,fill=gender),alpha=.4) + 
     scale_fill_manual("Gender", values = c("Male" = "blue", "Female" = "Red")) +
     facet_wrap(~marathon) + 
     theme_bw() + 
-    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+    xlab("Time (HH:MM)") + 
+    ylab("Density") +
+    ggtitle("Densities of Winning Times by Marathon by Gender (1966-2018)")  
 ```
 
-Now *Boston* and NYC have the least variable distributions for both genders, and only Chicago and Berlin (and arguablely Japan) still have that right tail for the women's distribution. The tight densities for most male distributions suggest a consistent range of winning times at these marathons, as well as for the women in NYC and Boston, relatively speaking. Berlin, Chicago, and London also have quite similar pairs of density plots.
+NYC still the least variable distributions for both genders, again followed by London. NYC, Chicago, Boston, and Berlin (and arguablely Japan) still have that right tail for the women's distribution while Tokyo and London still do not. The tight densities for most male distributions suggest a consistent range of winning times at these marathons, as well as for the women in NYC, relatively speaking. Berlin, Chicago, and Boston also have quite similar pairs of density plots.
 
 ### Conclusion
 
-Overall, this was just a quick analysis I thought to go through in light of all the recent excitement of London and Boston this year. I'm pretty sure most of these inferences won't chance to much after the rest of the WMM's for 2018 are ran, but I'll probably still update the dataset and these plots all the same. 
+Overall, this was just a quick analysis I thought to go through in light of all the recent excitement of London and Boston this year. I'm pretty sure most of these inferences won't chance to much after the rest of the WMM's for 2018 are ran, but I'll probably still update the dataset and these plots all the same. I may also add the Olympic and World Championship races as well.
 
 The code for the scraping and cleaning can be found [here](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/marathons.R) and the code for this writeup can be found [here](https://github.com/newns92/major_marathon_sponsor_analysis/blob/master/majorMarathonsAnalysis.Rmd). If you've got any any comments, feel free to let me know on [Twitter](https://twitter.com/s_newns92), [GitHub](https://github.com/newns92), or [LinkedIn](https://www.linkedin.com/in/stephen-newns/)
