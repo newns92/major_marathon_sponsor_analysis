@@ -1,9 +1,16 @@
 ---
 title: "An Analysis of World Marathon Major Winners"
 author: "Steve Newns"
-date: 2018-05-04T21:09:30-05:00
-categories: ["R"]
-tags: ["R Markdown","plot","running","marathon","distance running","rstats"]
+date: '2018-05-04T21:09:30-05:00'
+output: pdf_document
+tags:
+- R Markdown
+- plot
+- running
+- marathon
+- distance running
+- rstats
+categories: R
 ---
 
 ```{r,warning=F,message=F,echo=F}
@@ -203,9 +210,9 @@ marathons %>%
   ggplot(aes(year,minTime)) + 
     geom_line() + 
     geom_smooth() +
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
-    theme_bw() + 
-    xlab("Year") + 
+#     coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
+    theme_bw() +
+    xlab("Year") +
     ylab("Time (HH:MM)") +
     ggtitle("Trend of Fastest Winning WMM Time by Year (1897-2018)")
 ```
@@ -232,7 +239,7 @@ marathons %>%
     ggtitle("Trend of Fastest Winning Times by Year by Gender (1966-2018)")  
 ```
 
-It appears the fastest winning timse for women started out quite slow, relative to their current times, followed by a remarkably quick drop between 1970 and 1980. Then, the times start to resemble the slow, declining pattern that is present in the men's plot. These winning times line plots can be split out by marathon as well, where we can then include all winning times, not just the fastest of the year.
+It appears the fastest winning times for women started out quite slow, relative to their current times, followed by a remarkably quick drop between 1970 and 1980. Then, the times start to resemble the slow, declining pattern that is present in the men's plot. These winning times line plots can be split out by marathon as well, where we can then include all winning times, not just the fastest of the year.
 
 ```{r, warning=F,message=F,echo=F, fig.align='center'}
 marathons %>%
@@ -262,8 +269,8 @@ marathons %>%
     theme_bw() + 
     facet_wrap(~marathon) +
     guides(colour = "none") +
-    coord_cartesian(xlim=c(2007,2018),
-                    ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00")))) + 
+    coord_cartesian(xlim=c(2007,2018)) +
+  #, ylim = c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"02:25:00")))) + 
     xlab("Year") + 
     ylab("Time (HH:MM)") +
     ggtitle("Trend of Winning Times by Year by Marathon (2007-2018)")  +
@@ -318,7 +325,7 @@ marathons %>%
   ggplot(aes(marathon,time)) + 
     geom_boxplot(aes(fill = marathon),alpha=.4, outlier.colour = "black",varwidth = T) +   
     scale_fill_brewer(palette = "Set2") +
-    coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00")))) + 
+    #coord_cartesian(ylim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:35:00")))) + 
     guides(fill=F) + 
     theme_bw() + 
     xlab("Marathon") + 
@@ -344,7 +351,7 @@ So, Boston and NYC appear to be the slowest of the WMM's, with higher (i.e. slow
 marathons %>%
   filter(!is.na(time)) %>%
   ggplot(aes(time)) + 
-  geom_histogram(bins=100,na.rm=T,fill="green") + 
+  geom_histogram(bins=100,na.rm=T,fill="#4bc459",color="black") + 
   #coord_cartesian(xlim=c(as.POSIXct(paste(Sys.Date(),"02:00:00")),as.POSIXct(paste(Sys.Date(),"03:00:00")))) + 
   theme_bw() + 
   xlab("Time (HH:MM)") + 
